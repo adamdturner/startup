@@ -19,3 +19,9 @@ This is the command to remote shell into my server:
 
 ### ssh -i [path to keypair file] ubuntu@107.23.7.60
 
+## Week 3 Day 7
+I registered my own domain name using route 53 with amazon. The domain name that I picked is adam260startup.click
+I learned how to connect the connect the domain to the server IP address and also learned to use Caddy and Let's Encrypt to make the website traffic secure.
+It is now possible to go to the website through it's new domain:
+https://adam260startup.click
+
