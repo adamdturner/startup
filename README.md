@@ -45,6 +45,14 @@ Example: When a user marks a task as complete, other group members receive an in
 
 ## 2. HTML Deliverable (Due February 5th)
 
+HTML pages - for each component of your application  
+Links - between pages as necessary  
+Text -   
+Application images -  
+Login - placeholder, including user name display  
+Database - data placeholder showing content stored in the database  
+WebSocket - data placeholder showing where realtime communication will go  
+
 ## 3. CSS
 
 ## 4. JavaScript
