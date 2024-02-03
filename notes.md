@@ -25,3 +25,12 @@ I learned how to connect the connect the domain to the server IP address and als
 It is now possible to go to the website through it's new domain:
 https://adam260startup.click
 
+## Week 3 Day 9
+I learned about proper html formatting with Header, Main and Footer sections as well as creating lists and tables within those sections. HTML is simply just the main format of you everything is layed out and sectioned off but it is not what makes the web page look really nice in the end. Fonts, colors and animations are done later in CSS. 
+
+## Week 4 Day 11
+I learned about how CSS and HTML are linked together to be able to provide a more asthetic look to the web page. You can use CSS on sections of HTML code to change colors of text or background as well as include animations or movement to text and images in the page.
+
+
+
+
