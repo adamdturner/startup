@@ -17,7 +17,7 @@ This is the website with my server IP address:
 
 This is the command to remote shell into my server:
 
-### ssh -i [path to keypair file] ubuntu@107.23.7.60
+### ssh -i [path to keypair file] ubuntu@34.198.26.40
 
 ## Week 3 Day 7
 I registered my own domain name using route 53 with amazon. The domain name that I picked is adam260startup.click
