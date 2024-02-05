@@ -31,6 +31,8 @@ I learned about proper html formatting with Header, Main and Footer sections as 
 ## Week 4 Day 11
 I learned about how CSS and HTML are linked together to be able to provide a more asthetic look to the web page. You can use CSS on sections of HTML code to change colors of text or background as well as include animations or movement to text and images in the page.
 
-
+## Week 5 Day 13
+I created the html files for my startup project and learned how to use the live server extension on VSCode to see the webpage as it will look once I actually deploy it. I also copied over the deployFiles.sh file to be able to actually deploy my html code to the server that I am paying for. My website is now up and 
+running at this url link: https://startup.adam260startup.click/
 
 
