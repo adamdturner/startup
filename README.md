@@ -45,13 +45,19 @@ Example: When a user marks a task as complete, other group members receive an in
 
 ## 2. HTML Deliverable (Due February 5th)
 
-HTML pages - for each component of your application  
-Links - between pages as necessary  
-Text -   
-Application images -  
-Login - placeholder, including user name display  
-Database - data placeholder showing content stored in the database  
-WebSocket - data placeholder showing where realtime communication will go  
+HTML pages - I created html pages representing the home/login page, the info/about page, the My Lists page and the Group Lists page.  
+
+Links - links are displayed in the headers to travel between pages. Depending on the user's logged in status they can travel to personal or group lists or they will be rerouted back to the main login page. The functionality for this is not implemented until I actually implement the services later on.
+
+Text - textual descriptions are used on each page to understand what each page does.
+
+Application images - the about page has an image showing an example of what the user could see if they chose to use the Task Manager.
+
+Login - placeholder, including user name display. I also included a logout button on the other pages once the user has already logged in.
+
+Database - lists are displayed as placeholders for what will be actual data pulled from the database in the future.  
+
+WebSocket - completed task items are represented by placeholders as well. On group lists, these completed tasks will show up for all users, also identifying who completed the task.
 
 ## 3. CSS
 
