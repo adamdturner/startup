@@ -45,11 +45,15 @@ Example: When a user marks a task as complete, other group members receive an in
 
 ## 2. HTML Deliverable (Due February 5th)
 
-HTML pages - I created html pages representing the home/login page, the info/about page, the My Lists page and the Group Lists page.  
+HTML pages - I created html pages representing the home/login page, the info/about page, the My Lists page and the Group Lists page.
 
-Links - links are displayed in the headers to travel between pages. Depending on the user's logged in status they can travel to personal or group lists or they will be rerouted back to the main login page. The functionality for this is not implemented until I actually implement the services later on.
+Organization - Each html page has a head as well as a body which contains a header, main, and footer.
+
+Links - links are displayed in the headers to travel between pages. 
 
 Text - textual descriptions are used on each page to understand what each page does.
+
+Service calls - Depending on the user's logged in status they can travel to personal or group lists or they will be rerouted back to the main login page. The functionality for this is not implemented until I actually implement the services later on. Same thing goes for creating a list or marking off a list item; the functionality is not yet complete for those service calls.
 
 Application images - the about page has an image showing an example of what the user could see if they chose to use the Task Manager.
 
