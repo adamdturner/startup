@@ -51,7 +51,7 @@ Organization - Each html page has a head as well as a body which contains a head
 
 Links - links are displayed in the headers to travel between pages. 
 
-Text - textual descriptions are used on each page to understand what each page does.
+Text - textual descriptions are used on each page to understand what each page does. It is not formatted properly, normally the task lists will have incomplete items on the left with the completed items on the right (instead of below).
 
 Service calls - Depending on the user's logged in status they can travel to personal or group lists or they will be rerouted back to the main login page. The functionality for this is not implemented until I actually implement the services later on. Same thing goes for creating a list or marking off a list item; the functionality is not yet complete for those service calls.
 
