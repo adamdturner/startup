@@ -1,0 +1,53 @@
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+}
+
+.navbar {
+  display: flex;
+  justify-content: left;
+}
+
+.navbar-brand {
+  margin-right: 20px; /* Space between the brand and nav items */
+}
+
+.navbar-nav {
+  display: flex;
+  list-style: none; /* Remove default list styling */
+  padding: 0;
+  margin: 0;
+  align-items: center; /* Align nav items vertically */
+}
+
+.nav-item {
+  margin-right: 20px; /* Spacing between nav items */
+}
+
+main {
+  flex: 1 calc(80vh);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 2px solid grey;
+  margin-bottom: 10px;
+}
+
+footer {
+  display: flex;
+  justify-content: space-between; /* This aligns children elements to the sides */
+  align-items: center; /* This keeps items vertically aligned at the center */
+  padding: 20px; /* Adds some padding for spacing */
+}
+
+footer a {
+  margin-left: auto; /* Pushes the link to the right */
+  text-decoration: none; /* Removes the underline from the link */
+}
