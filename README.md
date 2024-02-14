@@ -63,7 +63,23 @@ Database - lists are displayed as placeholders for what will be actual data pull
 
 WebSocket - completed task items are represented by placeholders as well. On group lists, these completed tasks will show up for all users, also identifying who completed the task.
 
-## 3. CSS
+## 3. CSS Deliverable (Due February 14th)
+
+Simon.css - I deployed the Simon.css application to my projects simon subdomain here: [Simon](https://simon.adam260startup.click/)
+
+Main.css - I included a CSS file in my startup application that has my name and link to my GitHub repository. [Startup Home Page](https://startup.adam260startup.click/)
+
+CSS Header, Footer, Main - 
+
+Navigation Elements - 
+
+Window Resizing - 
+
+Application Elements - 
+
+Application Text Content - 
+
+Application Images - 
 
 ## 4. JavaScript
 
