@@ -52,6 +52,9 @@ footer a {
 }
 
 .picture-box img {
-    max-width: 100%;
+    max-width: 65%; 
     height: auto;
+    display: block;
+    margin: 0 auto;
 }
+
