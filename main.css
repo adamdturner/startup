@@ -33,6 +33,12 @@ main {
   margin-bottom: 10px;
 }
 
+main p {
+    padding: 0 20px; /* Adds horizontal padding */
+    text-align: justify; /* Justifies the text for better readability */
+    margin-bottom: 20px; /* Adds some space between paragraphs */
+}
+
 footer {
   display: flex;
   justify-content: space-between; /* This aligns children elements to the sides */
@@ -43,4 +49,9 @@ footer {
 footer a {
   margin-left: auto; /* Pushes the link to the right */
   text-decoration: none; /* Removes the underline from the link */
+}
+
+.picture-box img {
+    max-width: 100%;
+    height: auto;
 }
