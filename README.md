@@ -65,21 +65,21 @@ WebSocket - completed task items are represented by placeholders as well. On gro
 
 ## 3. CSS Deliverable (Due February 14th)
 
-Simon.css - I deployed the Simon.css application to my projects simon subdomain here: [Simon](https://simon.adam260startup.click/)
+Simon - I deployed the Simon.css application to my projects simon subdomain here: [Simon](https://simon.adam260startup.click/)
 
-Main.css - I included a CSS file in my startup application that has my name and link to my GitHub repository. [Startup Home Page](https://startup.adam260startup.click/)
+Startup - Here is a link to my startup application: [Startup](https://startup.adam260startup.click/)
 
-CSS Header, Footer, Main - 
+CSS Header, Footer, Main - I made a navigation bar in the header for each page to be able to navigate to other pages. The footer on each page contains my name and link to GitHub. I made the spacing consistent using flex so that even on different size browser screensa (like on a phone) everything would fit on the screen correctly.
 
-Navigation Elements - 
+Navigation Elements - Each page's navigation selection is relevant to where you currently are. For example, if you are currently on the "about" page there won't be a navigation link to the "about" page because it is the one you are currently on. When javascript is implemented, some of these navigation links will depend on whether or not the user is currently logged in.
 
-Window Resizing - 
+Window Resizing - I used flex to make sure everything fits to the screen that the user is working with, including phone screens.
 
-Application Elements - 
+Application Elements - Placeholder buttons are being used for things like "Create List" or "Add Person" or "Login/Logout". 
 
-Application Text Content - 
+Application Text Content - I used consistent fonts and text spacing.
 
-Application Images - 
+Application Images - I made sure the image resizes when the window does.
 
 ## 4. JavaScript
 
