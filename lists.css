@@ -1,3 +1,65 @@
 /*  This file does the formatting for the main section of myLists and groupLists
 in order to make the list formatting look better */
 
+/* lists.css */
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+main div, main h3, main ul {
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+button {
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  background-color: #f0f0f0;
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+h3 {
+  color: #333;
+}
+
+.list-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 20px; /* Adjust the space between the list and its completed items */
+    margin-bottom: 20px; /* Space between each list-container */
+    flex-wrap: wrap; /* Allows items to wrap onto the next line if not enough space */
+}
+
+.list-container > div {
+    flex: 1; /* Makes each child of list-container flexible but with equal importance */
+    min-width: 250px; /* Minimum width for each list to ensure readability */
+}
