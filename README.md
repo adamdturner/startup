@@ -81,6 +81,8 @@ Application Text Content - I used consistent fonts and text spacing.
 
 Application Images - I made sure the image resizes when the window does.
 
+Extra - I also added an image file called icon.ico which is used as the small website icon that shows up on the browser tab and in your browser history etc.
+
 ## 4. JavaScript
 
 ## 5. Web service
