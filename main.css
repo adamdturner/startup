@@ -4,30 +4,20 @@ body {
 }
 
 header {
-  display: flex;
-  align-items: center;
+  flex: 0;
   padding: 20px;
 }
 
-.navbar {
+ul {
+  flex: 1;
   display: flex;
-  justify-content: left;
-}
-
-.navbar-brand {
-  margin-right: 20px; /* Space between the brand and nav items */
-}
-
-.navbar-nav {
-  display: flex;
-  list-style: none; /* Remove default list styling */
-  padding: 0;
-  margin: 0;
-  align-items: center; /* Align nav items vertically */
+  /*  overwrite Bootstrap so the menu does not wrap */
+  flex-direction: row !important;
+  list-style: none;
 }
 
 .nav-item {
-  margin-right: 20px; /* Spacing between nav items */
+  padding: 0 0.3em;
 }
 
 main {
