@@ -42,45 +42,88 @@
     </header>
     <main>
       <p>Create a new shared list</p>
-      <form method="get" action="groupLists.html">
-        <label for="name">List Name</label>
-        <input type="text" id="name" placeholder="List name here" />
-        <button type="submit">Create</button>
-      </form>
-      <h3>Group Supplies List - List Admin: Dave</h3>
+      <div>
         <form method="get" action="groupLists.html">
-          <label for="name">Add friend to as list contributor</label>
-          <input type="text" id="name" placeholder="username here" />
-          <button type="submit">Add</button>
+          <label for="name">List Name</label>
+          <input type="text" id="name" placeholder="List name here" />
+          <button type="submit">Create</button>
         </form>
-        <ul>
-          <li>Scissors</li>
-          <li>Paper</li>
-          <li>Paint</li>
-        </ul>
-      <h3>Completed Items</h3>
-        <ul>
-          <li>Markers - completed by Dave</li>
-          <li>Glue - completed by Joey</li>
-          <li>Pencils and pens - completed by Daniel</li>
-          <li>Cardboard - completed by Joey</li>
-        </ul>
-      <h3>Camping supplies - List Admin: Tim</h3>
-        <form method="get" action="groupLists.html">
-          <label for="name">Add friend to as list contributor</label>
-          <input type="text" id="name" placeholder="username here" />
-          <button type="submit">Add</button>
-        </form>
-        <ul>
-          <li>4 man tent</li>
-          <li>Water filters</li>
-          <li>Water pot</li>
-        </ul>
-      <h3>Completed Items</h3>
-        <ul>
-          <li>Cookstove - completed by Jeffrey</li>
-          <li>Map and compass - completed by Tim</li>
-        </ul>
+      </div>
+      <!-- First list -->
+      <div class="list-container">
+        <div>
+          <h3>Group Supplies List</h3>
+          <form method="get" action="groupLists.html">
+            <label for="name">Add list item</label>
+            <input type="text" id="name" placeholder="item" />
+            <button type="submit">Add</button>
+          </form>
+          <ul class="list">
+            <li>Scissors</li>
+            <li>Paper</li>
+            <li>Paint</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Completed Items</h3>
+          <ul class="list">
+            <li>Markers - completed by Dave</li>
+            <li>Glue - completed by Joey</li>
+            <li>Pencils and pens - completed by Daniel</li>
+            <li>Cardboard - completed by Joey</li>
+          </ul>
+        </div>
+        <div>
+          <h3>List Members</h3>
+          <form method="get" action="groupLists.html">
+            <label for="name">Add friend as list contributor</label>
+            <input type="text" id="name" placeholder="username here" />
+            <button type="submit">Add</button>
+          </form>
+          <ul class="list">
+            <li>Dave (Admin)</li>
+            <li>Joey</li>
+            <li>Daniel</li>
+          </ul>
+        </div>  
+      </div>
+      <!-- Repeat for another list -->
+      <div class="list-container">
+        <div>
+          <h3>Camping Supplies List</h3>
+          <form method="get" action="groupLists.html">
+            <label for="name">Add list item</label>
+            <input type="text" id="name" placeholder="item" />
+            <button type="submit">Add</button>
+          </form>
+          <ul class="list">
+            <li>4 man tent</li>
+            <li>Water filter</li>
+            <li>Water pot</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Completed Items</h3>
+          <ul class="list">
+            <li>Cook stove - completed by Jeffrey</li>
+            <li>Map and Compass - completed by Tim</li>
+          </ul>
+        </div>
+        <div>
+          <h3>List Members</h3>
+          <form method="get" action="groupLists.html">
+            <label for="name">Add friend as list contributor</label>
+            <input type="text" id="name" placeholder="username here" />
+            <button type="submit">Add</button>
+          </form>
+          <ul class="list">
+            <li>Tim (Admin)</li>
+            <li>Dave</li>
+            <li>Jeffrey</li>
+          </ul>
+        </div>  
+      </div>
+      <!-- Repeat for another list -->
     </main>
     <footer>
       <hr />

@@ -52,11 +52,11 @@ h3 {
 
 .list-container {
     display: flex;
-    justify-content: flex-start;
+    justify-content:center;
     align-items: flex-start;
-    gap: 20px; /* Adjust the space between the list and its completed items */
+    gap: 30px; /* Adjust the space between the list and its completed items */
     margin-bottom: 20px; /* Space between each list-container */
-    flex-wrap: wrap; /* Allows items to wrap onto the next line if not enough space */
+    
 }
 
 .list-container > div {
