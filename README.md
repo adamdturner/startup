@@ -14,7 +14,7 @@ It is the number 1 task manager for groups or individuals. Task manager is a sim
 
 You can see how a task list may look in the image below. When you go to one of your task lists it will open up a page like this one showing you the admin is (whether that be you or someone else if another person added you to their task group). It shows the tasks that were completed and who did them as well as the remaining tasks to complete. A full list of group members that contribute to the list are below.
 
-![image](https://github.com/adamdturner/startup/assets/144283713/304626a3-b413-4bc9-b071-02ea9cf03a7a)
+![image](https://github.com/adamdturner/startup/assets/144283713/a73818ad-517d-4ef2-b094-b750bd448c04)
 
 
 ### Key Features and technologies:
