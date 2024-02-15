@@ -55,11 +55,22 @@ h3 {
     justify-content:center;
     align-items: flex-start;
     gap: 30px; /* Adjust the space between the list and its completed items */
-    margin-bottom: 20px; /* Space between each list-container */
-    
+    margin-bottom: 15px; /* Space between each list-container */
+    margin-top: 15px;
+    border: 2px solid #ccc; /* Adds a light grey border around the container */
+    border-radius: 8px; /* Optional: Adds rounded corners to the border */
+    padding: 20px; /* Adds some padding inside the container */
 }
 
 .list-container > div {
-    flex: 1; /* Makes each child of list-container flexible but with equal importance */
-    min-width: 250px; /* Minimum width for each list to ensure readability */
+    flex: 1; /* Keeps the flexible but equal importance */
+    flex-basis: 250px; /* Suggests an initial starting point for the flex item but allows growth */
+    min-width: 0; /* Allows the items to shrink if necessary, useful for responsiveness */
+}
+
+@media (max-width: 768px) {
+    .list-container {
+        flex-direction: column;
+        align-items: center; /* Centers the items when stacked vertically */
+    }
 }
