@@ -11,7 +11,7 @@ header {
   padding: 20px;
 }
 
-ul {
+.navbar-nav {
   flex: 1;
   display: flex;
   /*  overwrite Bootstrap so the menu does not wrap */
