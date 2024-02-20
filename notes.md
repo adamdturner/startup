@@ -35,4 +35,5 @@ I learned about how CSS and HTML are linked together to be able to provide a mor
 I created the html files for my startup project and learned how to use the live server extension on VSCode to see the webpage as it will look once I actually deploy it. I also copied over the deployFiles.sh file to be able to actually deploy my html code to the server that I am paying for. My website is now up and 
 running at this url link: https://startup.adam260startup.click/
 
-
+## Week 6 Day 18
+I learned how javascript is included with html and how event listeners are useful because they can trigger a function to be executed when a certain action has been taken place by a user.
