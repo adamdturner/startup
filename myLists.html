@@ -24,7 +24,7 @@
     integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" 
     crossorigin="anonymous">
   </head>
-  <body>
+  <body onload="displayUserName()">
     <header>
       <!-- Navigation Bar -->
       <nav class="navbar">
@@ -45,6 +45,7 @@
       </nav>
     </header>
     <main>
+      <p id="userName_placeHolder"></p>
       <p>Create a new personal list</p>
       <div>
           <form method="get" action="myLists.html">
