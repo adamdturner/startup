@@ -65,7 +65,7 @@ WebSocket - completed task items are represented by placeholders as well. On gro
 
 ## 3. CSS Deliverable (Due February 14th)
 
-Simon - I deployed the Simon.css application to my projects simon subdomain here: [Simon](https://simon.adam260startup.click/)
+Simon - I deployed the Simon-css application to my projects simon subdomain here: [Simon](https://simon.adam260startup.click/)
 
 Startup - Here is a link to my startup application: [Startup](https://startup.adam260startup.click/)
 
@@ -84,6 +84,22 @@ Application Images - I made sure the image resizes when the window does.
 Extra - I also added an image file called icon.ico which is used as the small website icon that shows up on the browser tab and in your browser history etc.
 
 ## 4. JavaScript Deliverable (Due February 28th)
+
+Simon - I deployed the Simon-javascript application to my projects simon subdomain here: [Simon](https://simon.adam260startup.click/)
+
+Startup - Here is a link to my startup application: [Startup](https://startup.adam260startup.click/)
+
+JavaScript that takes user input and adds it to the mocked database data.
+
+JavaScript that reads the login input and displays the user name.
+
+JavaScript that mocks your database data and injects it into the DOM.
+
+localstorage API to keep data between pages and browser sessions.
+
+JavaScript that mocks out the realtime data you expect to get from the server using WebSocket and inject it into the DOM.
+
+name is displayed in the application and that there is a link to your GitHub repository
 
 ## 5. Web service
 
