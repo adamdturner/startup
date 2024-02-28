@@ -91,7 +91,9 @@ Startup - Here is a link to my startup application: [Startup](https://startup.ad
 
 JavaScript that takes user input and adds it to the mocked database data.
 
-JavaScript that reads the login input and displays the user name.
+Username - I used JavaScript to take the username that is typed in the login and displays it on personal and group list pages. If 
+no username is input then it defaults to "No username input" for now until authentication is implemented. With actual authentication
+it normally wouldn't allow login if there is no username typed in or if the username/password combo is incorrect.
 
 JavaScript that mocks your database data and injects it into the DOM.
 
