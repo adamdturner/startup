@@ -9,7 +9,8 @@
     <!-- Include Icon image for website -->
     <link rel="icon" href="icon.ico" />
 
-    <!-- include link to main.css -->
+    <!-- include link to main.css and login.js -->
+    <script src="login.js"></script>
     <link rel="stylesheet" href="main.css" />
 
     <!-- include link to bootstrap -->
@@ -35,11 +36,11 @@
     <main>
       <h1>Welcome</h1>
       <p>Login to access your personal and group task lists</p>
-      <form method="get" action="myLists.html">
+      <div>
         <label for="name">Name</label>
         <input type="text" id="name" placeholder="Your name here" />
-        <button type="submit" class="btn btn-primary">Login</button>
-      </form>
+        <button onclick="login()" class="btn btn-primary">Login</button>
+      </div>
     </main>
 
     <footer>
