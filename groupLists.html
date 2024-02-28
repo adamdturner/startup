@@ -24,7 +24,7 @@
     integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" 
     crossorigin="anonymous">
   </head>
-  <body>
+  <body onload="displayUserName()">
     <header>
       <!-- Navigation Bar -->
       <nav class="navbar">
@@ -45,6 +45,7 @@
       </nav>
     </header>
     <main>
+      <h1 id="userName_placeHolder"></h1>
       <p>Create a new shared list</p>
       <div>
         <form method="get" action="groupLists.html">
