@@ -46,86 +46,13 @@
     </header>
     <main>
       <h1 id="userName_placeHolder"></h1>
-      <p>Create a new personal list</p>
-      <div>
-          <form method="get" action="myLists.html">
-              <label for="name">List Name</label>
-              <input type="text" id="name" placeholder="List name here" />
-              <button type="submit">Create</button>
-          </form>
-      </div>
-      <p>Here are your current lists</p>
-      <!-- First list -->
-      <div class="list-container">
-          <div>
-              <h3>Shopping List</h3>
-              <form method="get" action="myLists.html">
-                <label for="name">Add list item</label>
-                <input type="text" id="listItem" placeholder="item" />
-                <button type="submit">Add</button>
-              </form>
-              <ul class="list">
-                  <li>Milk</li>
-                  <li>Bread</li>
-                  <li>Eggs</li>
-                  <li>Cheese</li>
-              </ul>
-          </div>
-          <div>
-              <h3>Completed Items</h3>
-              <ul class="list">
-                  <li>Juice</li>
-                  <li>Ground beef</li>
-                  <li>Chicken</li>
-              </ul>
-          </div>
-      </div>
-      <!-- Repeat for another list -->
-      <div class="list-container">
-        <div>
-            <h3>To-do List</h3>
-            <form method="get" action="myLists.html">
-              <label for="name">Add list item</label>
-              <input type="text" id="listItem" placeholder="item" />
-              <button type="submit">Add</button>
-            </form>
-            <ul class="list">
-                <li>Clean</li>
-                <li>Go Shopping</li>
-                <li>Homework</li>
-            </ul>
-        </div>
-        <div>
-            <h3>Completed Items</h3>
-            <ul class="list">
-                <li>Workout</li>
-                <li>Read</li>
-            </ul>
-        </div>
-      </div>
-      <!-- Repeat for another list -->
-      <div class="list-container">
-        <div>
-            <h3>Homework List</h3>
-            <form method="get" action="myLists.html">
-              <label for="name">Add list item</label>
-              <input type="text" id="listItem" placeholder="item" />
-              <button type="submit">Add</button>
-            </form>
-            <ul class="list">
-                <li>Math Quiz</li>
-                <li>Book of Mormon Reading</li>
-            </ul>
-        </div>
-        <div>
-            <h3>Completed Items</h3>
-            <ul class="list">
-                <li>Physics Lab</li>
-                <li>English Essay</li>
-                <li>CS260 CSS assignment</li>
-            </ul>
-        </div>
-      </div>
+      
+      <form id="createListForm">
+        <label for="listName">Create a new list</label>
+        <input type="text" id="listName" placeholder="List name here" />
+        <button type="button" id="createListButton">Create</button>
+      </form>
+
     </main>  
     <footer>
       <hr />
