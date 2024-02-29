@@ -11,7 +11,7 @@ main {
 
 main div, main h3, main ul {
   width: 100%;
-  max-width: 600px;
+  max-width: 700px;
   margin-bottom: 20px;
 }
 
@@ -52,8 +52,9 @@ h3 {
 
 .list-container {
     display: flex;
-    justify-content:center;
+    justify-content: center;
     align-items: flex-start;
+    max-width: 700px;
     gap: 30px; /* Adjust the space between the list and its completed items */
     margin-bottom: 15px; /* Space between each list-container */
     margin-top: 15px;
