@@ -104,8 +104,8 @@ the time is considered the admin when creating a group list on the Group Lists p
 name of the person who created the list is displayed as the list admin. There will be functionality to add other users by their username so they 
 can also contribute to a list by adding or moving items back and forth.
 
-Realtime data - the data that I would expect to get from the server using WebSocket is show on the side with notifications of people completing
-list items. This data would be taken in realtime from WebSocket and injected it into the DOM. Right now the data you see is a placeholder.
+Realtime data - the data that I would expect to get from the server using WebSocket is show on the group lists. We would expect to be able to see
+other users completing tasks on shared lists in realtime. This data would be taken in realtime from WebSocket and injected it into the DOM.
 
 Name/GitHub - my name and github link are both displayed in the footer of each page.
 
