@@ -1,5 +1,4 @@
 
-  
 function displayUserName() {
   var text = getUserName();
   document.getElementById('userName_placeHolder').innerText = text;
@@ -12,11 +11,11 @@ function getUserName() {
 
 class MyList {
     constructor() {
-        let storedLists = JSON.parse(localStorage.getItem('lists')) || [];
+        let storedPersonalLists = JSON.parse(localStorage.getItem('myLists')) || [];
         // Ensure each list has a 'completedItems' array
-        this.lists = storedLists.map(list => ({
+        this.lists = storedPersonalLists.map(list => ({
             ...list,
-            completedItems: list.completedItems || []
+            myCompletedItems: list.myCompletedItems || []
         }));
     }
     
@@ -24,7 +23,7 @@ class MyList {
         // Check if the list already exists
         const listExists = this.lists.some(list => list.name === listName);
         if (!listExists) {
-            const newList = { name: listName, items: [], completedItems: [] };
+            const newList = { name: listName, myItems: [], myCompletedItems: [] };
             this.lists.push(newList);
             this.updateLocalStorage();
             this.renderLists();
@@ -39,9 +38,9 @@ class MyList {
         const list = this.lists.find(list => list.name === listName);
         if (list) {
             if (itemName.length > 0) {
-                const itemExists = list.items.includes(itemName) || list.completedItems.includes(itemName);
+                const itemExists = list.myItems.includes(itemName) || list.myCompletedItems.includes(itemName);
                 if (!itemExists) {
-                    list.items.push(itemName);
+                    list.myItems.push(itemName);
                     this.updateLocalStorage();
                     this.renderLists();
                 } else {
@@ -63,8 +62,8 @@ class MyList {
         const list = this.lists.find(list => list.name === listName);
         if (list) {
             // Move item to completedItems
-            list.items = list.items.filter(item => item !== itemName);
-            list.completedItems.push(itemName);
+            list.myItems = list.myItems.filter(item => item !== itemName);
+            list.myCompletedItems.push(itemName);
             
             this.updateLocalStorage();
             this.renderLists();
@@ -72,7 +71,7 @@ class MyList {
     }    
 
     updateLocalStorage() {
-        localStorage.setItem('lists', JSON.stringify(this.lists));
+        localStorage.setItem('myLists', JSON.stringify(this.lists));
     }
 
     renderLists() {
@@ -92,13 +91,13 @@ class MyList {
                         <button type="button" class="addItemButton">Add</button>
                     </form>
                     <ul class="list">
-                        ${list.items.map(item => `<li>${item}</li>`).join('')}
+                        ${list.myItems.map(item => `<li>${item}</li>`).join('')}
                     </ul>
                 </div>
                 <div>
                     <h3>Completed Items</h3>
                     <ul class="list">
-                        ${list.completedItems.map(item => `<li>${item}</li>`).join('')}
+                        ${list.myCompletedItems.map(item => `<li>${item}</li>`).join('')}
                     </ul>
                 </div>
             `;
@@ -107,7 +106,7 @@ class MyList {
             // Add item functionality
             listContainer.querySelector('.addItemButton').addEventListener('click', () => {
                 const itemNameInput = listContainer.querySelector('.itemName');
-                this.addItemToList(list.name, itemNameInput.value);
+                this.addItemToList(list.name, itemNameInput.value, itemNameInput); // Pass the input element as well
                 itemNameInput.value = ''; // Clear input after adding
             });
 
@@ -125,12 +124,12 @@ class MyList {
 const myList = new MyList();
 myList.renderLists(); // Initial render
 
-document.getElementById('createListButton').addEventListener('click', () => {
-    const listNameInput = document.getElementById('listName');
-    const listName = listNameInput.value.trim();
-    if (listName) {
-        myList.createList(listName);
-        listNameInput.value = ''; // Clear input after creating
+document.getElementById('createMyListButton').addEventListener('click', () => {
+    const myListNameInput = document.getElementById('myListName');
+    const myListName = myListNameInput.value.trim();
+    if (myListName) {
+        myList.createList(myListName);
+        myListNameInput.value = ''; // Clear input after creating
     } else {
         alert('Please enter a list name.');
     }

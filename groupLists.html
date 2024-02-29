@@ -46,14 +46,15 @@
     </header>
     <main>
       <h1 id="userName_placeHolder"></h1>
-      <p>Create a new shared list</p>
       <div>
-        <form method="get" action="groupLists.html">
-          <label for="name">List Name</label>
-          <input type="text" id="name" placeholder="List name here" />
-          <button type="submit">Create</button>
+        <form id="createListForm">
+          <label for="groupListName">Create a new list</label>
+          <input type="text" id="groupListName" placeholder="List name here" />
+          <button type="button" id="createGroupListButton">Create</button>
         </form>
       </div>
+
+
       <p>Here are your shared lists</p>
       <!-- First list -->
       <div class="list-container">
