@@ -66,7 +66,7 @@ class GroupList {
         userName = userName.trim();
         const list = this.groupLists.find(list => list.name === listName);
         if (list) {
-            if (itemName.length > 0) {
+            if (userName.length > 0) {
                 const userExists = list.listContributors.includes(userName);
                 if (!userExists) {
                     list.listContributors.push(userName);
