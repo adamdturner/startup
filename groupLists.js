@@ -61,6 +61,31 @@ class GroupList {
         }
     }
 
+    addContributor(listName, userName, userNameInput) {
+        // Trim the itemName to remove leading and trailing whitespace
+        userName = userName.trim();
+        const list = this.groupLists.find(list => list.name === listName);
+        if (list) {
+            if (itemName.length > 0) {
+                const userExists = list.listContributors.includes(userName);
+                if (!userExists) {
+                    list.listContributors.push(userName);
+                    this.updateLocalStorage();
+                    this.renderLists();
+                } else {
+                    alert("This username already exists in the list.");
+                }
+            } else {
+                alert("Username cannot be empty.");
+            }
+        }
+        // Clear the input field and set focus back to it
+        if (userNameInput) {
+            userNameInput.value = ''; // Clear input after adding or if the attempt was to add an empty item
+            userNameInput.focus(); // Bring focus back to the input field for better user experience
+        }
+    }
+
     markItemAsCompleted(listName, itemName) {
         const list = this.groupLists.find(list => list.name === listName);
         if (list) {
@@ -71,7 +96,19 @@ class GroupList {
             this.updateLocalStorage();
             this.renderLists();
         }
-    }    
+    }
+
+    returnCompletedItemToMainList(listName, itemName) {
+        const list = this.groupLists.find(list => list.name === listName);
+        if (list) {
+            // Remove item from completedItems and add it back to items
+            list.groupCompletedItems = list.groupCompletedItems.filter(item => item !== itemName);
+            list.groupItems.push(itemName);
+    
+            this.updateLocalStorage();
+            this.renderLists();
+        }
+    }
 
     updateLocalStorage() {
         localStorage.setItem('groupLists', JSON.stringify(this.groupLists));
@@ -94,19 +131,24 @@ class GroupList {
                         <button type="button" class="addItemButton">Add</button>
                     </form>
                     <ul class="list">
-                        ${list.groupItems.map(item => `<li>${item}</li>`).join('')}
+                        ${list.groupItems.map(item => `<li class="active-item">${item}</li>`).join('')}
                     </ul>
                 </div>
                 <div>
                     <h3>Completed Items</h3>
                     <ul class="list">
-                        ${list.groupCompletedItems.map(item => `<li>${item}</li>`).join('')}
+                        ${list.groupCompletedItems.map(item => `<li class="completed-item">${item}</li>`).join('')}
                     </ul>
                 </div>
                 <div>
-                    <h3>List Contributors</h3>
+                    <h3>Contributors</h3>
+                    <form class="addContributorForm">
+                        <label for="userName">Add contributor</label>
+                        <input type="text" class="userName" placeholder="username" />
+                        <button type="button" class="addContributorButton">Add</button>
+                    </form>
                     <ul class="list">
-                        ${list.listContributors.map(item => `<li>${item}</li>`).join('')}
+                        ${list.listContributors.map(item => `<li class="contributor">${item}</li>`).join('')}
                     </ul>
                 </div>
             `;
@@ -120,12 +162,28 @@ class GroupList {
             });
 
             // Move to completed functionality
-            listContainer.querySelectorAll('.list li').forEach(itemElement => {
+            listContainer.querySelectorAll('.active-item').forEach(itemElement => {
                 itemElement.addEventListener('click', () => {
                     const itemName = itemElement.textContent;
                     this.markItemAsCompleted(list.name, itemName);
                 });
             });
+
+            // Return item to main list functionality
+            listContainer.querySelectorAll('.completed-item').forEach(itemElement => {
+                itemElement.addEventListener('click', () => {
+                    const itemName = itemElement.textContent;
+                    this.returnCompletedItemToMainList(list.name, itemName);
+                });
+            });
+
+            // Add contributor functionality
+            listContainer.querySelector('.addContributorButton').addEventListener('click', () => {
+                const userNameInput = listContainer.querySelector('.userName');
+                this.addContributor(list.name, userNameInput.value, userNameInput);
+                userNameInput.value = '';
+            })
+
         });
     }
 }

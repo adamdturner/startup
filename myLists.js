@@ -68,7 +68,19 @@ class MyList {
             this.updateLocalStorage();
             this.renderLists();
         }
-    }    
+    }
+
+    returnCompletedItemToMainList(listName, itemName) {
+        const list = this.lists.find(list => list.name === listName);
+        if (list) {
+            // Remove item from completedItems and add it back to items
+            list.myCompletedItems = list.myCompletedItems.filter(item => item !== itemName);
+            list.myItems.push(itemName);
+    
+            this.updateLocalStorage();
+            this.renderLists();
+        }
+    }
 
     updateLocalStorage() {
         localStorage.setItem('myLists', JSON.stringify(this.lists));
@@ -91,13 +103,13 @@ class MyList {
                         <button type="button" class="addItemButton">Add</button>
                     </form>
                     <ul class="list">
-                        ${list.myItems.map(item => `<li>${item}</li>`).join('')}
+                        ${list.myItems.map(item => `<li class="active-item">${item}</li>`).join('')}
                     </ul>
                 </div>
                 <div>
                     <h3>Completed Items</h3>
                     <ul class="list">
-                        ${list.myCompletedItems.map(item => `<li>${item}</li>`).join('')}
+                    ${list.myCompletedItems.map(item => `<li class="completed-item">${item}</li>`).join('')}
                     </ul>
                 </div>
             `;
@@ -111,10 +123,18 @@ class MyList {
             });
 
             // Move to completed functionality
-            listContainer.querySelectorAll('.list li').forEach(itemElement => {
+            listContainer.querySelectorAll('.active-item').forEach(itemElement => {
                 itemElement.addEventListener('click', () => {
                     const itemName = itemElement.textContent;
                     this.markItemAsCompleted(list.name, itemName);
+                });
+            });
+
+            // Return item to main list functionality
+            listContainer.querySelectorAll('.completed-item').forEach(itemElement => {
+                itemElement.addEventListener('click', () => {
+                    const itemName = itemElement.textContent;
+                    this.returnCompletedItemToMainList(list.name, itemName);
                 });
             });
         });
