@@ -16,6 +16,7 @@ class GroupList {
         // Ensure each list has a 'completedItems' array
         this.groupLists = storedLists.map(list => ({
             ...list,
+            listContributors: list.listContributors || [],
             groupCompletedItems: list.groupCompletedItems || []
         }));
     }
@@ -24,7 +25,9 @@ class GroupList {
         // Check if the list already exists
         const listExists = this.groupLists.some(list => list.name === listName);
         if (!listExists) {
-            const newList = { name: listName, groupItems: [], groupCompletedItems: [] };
+            const newList = { name: listName, groupItems: [], groupCompletedItems: [], listContributors: [] };
+            var admin = getUserName() + " (Admin)";
+            newList.listContributors.push(admin);
             this.groupLists.push(newList);
             this.updateLocalStorage();
             this.renderLists();
@@ -103,7 +106,7 @@ class GroupList {
                 <div>
                     <h3>List Contributors</h3>
                     <ul class="list">
-                        ${list.groupCompletedItems.map(item => `<li>${item}</li>`).join('')}
+                        ${list.listContributors.map(item => `<li>${item}</li>`).join('')}
                     </ul>
                 </div>
             `;
