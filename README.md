@@ -95,13 +95,19 @@ Username - I used JavaScript to take the username that is typed in the login and
 no username is input then it defaults to "No username input" for now until authentication is implemented. With actual authentication
 it normally wouldn't allow login if there is no username typed in or if the username/password combo is incorrect.
 
-JavaScript that mocks your database data and injects it into the DOM.
+Mock database - I use arrays to store list information to simulate a database that has the information to inject into the DOM. Right now 
+everything is stored in localStorage which means that no matter who is logged in, they will see the same lists regardless of who created them.
+When there is an actual database, I will be able to control which lists are shown depending on who is in session.
 
-localstorage API to keep data between pages and browser sessions.
+localStorage API - As mentioned above, I use localStorage to keep data between pages and browser sessions. Also, the user that is logged in at
+the time is considered the admin when creating a group list on the Group Lists page. You can see that when creating a list and seeing that the
+name of the person who created the list is displayed as the list admin. There will be functionality to add other users by their username so they 
+can also contribute to a list by adding or moving items back and forth.
 
-JavaScript that mocks out the realtime data you expect to get from the server using WebSocket and inject it into the DOM.
+Realtime data - the data that I would expect to get from the server using WebSocket is show on the side with notifications of people completing
+list items. This data would be taken in realtime from WebSocket and injected it into the DOM. Right now the data you see is a placeholder.
 
-name is displayed in the application and that there is a link to your GitHub repository
+Name/GitHub - my name and github link are both displayed in the footer of each page.
 
 ## 5. Web service
 
