@@ -21,20 +21,43 @@ class MyList {
     }
     
     createList(listName) {
-        const newList = { name: listName, items: [], completedItems: [] };
-        this.lists.push(newList);
-        this.updateLocalStorage();
-        this.renderLists();
-    }    
-
-    addItemToList(listName, itemName) {
-        const list = this.lists.find(list => list.name === listName);
-        if (list) {
-            list.items.push(itemName);
+        // Check if the list already exists
+        const listExists = this.lists.some(list => list.name === listName);
+        if (!listExists) {
+            const newList = { name: listName, items: [], completedItems: [] };
+            this.lists.push(newList);
             this.updateLocalStorage();
             this.renderLists();
+        } else {
+            alert("A list with this name already exists.");
+        }
+    }        
+
+    addItemToList(listName, itemName, itemNameInput) { // Assuming itemNameInput is the input element, if not, you'll need to retrieve it inside this method.
+        // Trim the itemName to remove leading and trailing whitespace
+        itemName = itemName.trim();
+        const list = this.lists.find(list => list.name === listName);
+        if (list) {
+            if (itemName.length > 0) {
+                const itemExists = list.items.includes(itemName) || list.completedItems.includes(itemName);
+                if (!itemExists) {
+                    list.items.push(itemName);
+                    this.updateLocalStorage();
+                    this.renderLists();
+                } else {
+                    alert("This item already exists in the list.");
+                }
+            } else {
+                alert("Item name cannot be empty.");
+            }
+        }
+        // Clear the input field and set focus back to it
+        if (itemNameInput) {
+            itemNameInput.value = ''; // Clear input after adding or if the attempt was to add an empty item
+            itemNameInput.focus(); // Bring focus back to the input field for better user experience
         }
     }
+    
 
     markItemAsCompleted(listName, itemName) {
         const list = this.lists.find(list => list.name === listName);
@@ -74,8 +97,9 @@ class MyList {
                 </div>
                 <div>
                     <h3>Completed Items</h3>
-                    ${list.completedItems.map(item => `<li>${item}</li>`).join('')}
-
+                    <ul class="list">
+                        ${list.completedItems.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
                 </div>
             `;
             mainElement.appendChild(listContainer);
