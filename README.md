@@ -89,8 +89,6 @@ Simon - I deployed the Simon-javascript application to my projects simon subdoma
 
 Startup - Here is a link to my startup application: [Startup](https://startup.adam260startup.click/)
 
-JavaScript that takes user input and adds it to the mocked database data.
-
 Username - I used JavaScript to take the username that is typed in the login and displays it on personal and group list pages. If 
 no username is input then it defaults to "No username input" for now until authentication is implemented. With actual authentication
 it normally wouldn't allow login if there is no username typed in or if the username/password combo is incorrect.
@@ -109,7 +107,21 @@ other users completing tasks on shared lists in realtime. This data would be tak
 
 Name/GitHub - my name and github link are both displayed in the footer of each page.
 
-## 5. Web service
+## 5. Web service Deliverable (Due March 11th)
+
+Simon - I deployed the Simon-service to my projects simon subdomain here: [Simon](https://simon.adam260startup.click/)
+
+Startup - Here is a link to my startup application: [Startup](https://startup.adam260startup.click/)
+
+Create an HTTP service using Node.js and Express
+
+Frontend served up using Express static middleware
+
+Your frontend calls third party service endpoints
+
+Your backend provides service endpoints
+
+Your frontend calls your service endpoints
 
 ## 6. Login
 
