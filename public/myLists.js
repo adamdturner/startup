@@ -20,77 +20,95 @@ class MyList {
     }
     
     createList(listName) {
-        // Check if the list already exists
-        const listExists = this.lists.some(list => list.name === listName);
-        if (!listExists) {
-            const newList = { name: listName, myItems: [], myCompletedItems: [] };
-            this.lists.push(newList);
-            this.updateLocalStorage();
-            this.renderLists();
-        } else {
-            alert("A list with this name already exists.");
-        }
-    }        
-
-    addItemToList(listName, itemName, itemNameInput) { // Assuming itemNameInput is the input element, if not, you'll need to retrieve it inside this method.
-        // Trim the itemName to remove leading and trailing whitespace
-        itemName = itemName.trim();
-        const list = this.lists.find(list => list.name === listName);
-        if (list) {
-            if (itemName.length > 0) {
-                const itemExists = list.myItems.includes(itemName) || list.myCompletedItems.includes(itemName);
-                if (!itemExists) {
-                    list.myItems.push(itemName);
-                    this.updateLocalStorage();
-                    this.renderLists();
-                } else {
-                    alert("This item already exists in the list.");
-                }
+        fetch('/api/myLists', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: listName })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert(data.message); // Handle errors or messages from the server
             } else {
-                alert("Item name cannot be empty.");
+                this.fetchAndRenderLists(); // re-fetch the lists from the server to update the UI
             }
-        }
-        // Clear the input field and set focus back to it
-        if (itemNameInput) {
-            itemNameInput.value = ''; // Clear input after adding or if the attempt was to add an empty item
-            itemNameInput.focus(); // Bring focus back to the input field for better user experience
-        }
+        })
+        .catch(error => console.error('Error creating list:', error));
+    }
+           
+    addItemToList(listId, itemName) {
+        fetch(`/api/myLists/${listId}/items`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: itemName })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.id) {
+                // Item was successfully created, now you have an ID for the new item
+                this.fetchAndRenderLists(); // Refresh or update your list display
+            }
+        });
+    }    
+    
+    markItemAsCompleted(listId, itemId) {
+        fetch(`/api/myLists/${listId}/completeItem/${itemId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(() => this.fetchAndRenderLists()) // Assuming you create a new method to fetch lists and render
+        .catch(error => console.error('Error completing item:', error));
     }
     
-
-    markItemAsCompleted(listName, itemName) {
-        const list = this.lists.find(list => list.name === listName);
-        if (list) {
-            // Move item to completedItems
-            list.myItems = list.myItems.filter(item => item !== itemName);
-            list.myCompletedItems.push(itemName);
-            
-            this.updateLocalStorage();
-            this.renderLists();
-        }
+    returnCompletedItemToMainList(listId, itemId) {
+        fetch(`/api/myLists/${listId}/reactivateItem/${itemId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(() => this.fetchAndRenderLists()) // Assuming you create a new method to fetch lists and render
+        .catch(error => console.error('Error reactivating item:', error));
     }
-
-    returnCompletedItemToMainList(listName, itemName) {
-        const list = this.lists.find(list => list.name === listName);
-        if (list) {
-            // Remove item from completedItems and add it back to items
-            list.myCompletedItems = list.myCompletedItems.filter(item => item !== itemName);
-            list.myItems.push(itemName);
     
-            this.updateLocalStorage();
+    fetchAndRenderLists() {
+        fetch('/api/myLists')
+        .then(response => response.json())
+        .then(data => {
+            this.lists = data;
             this.renderLists();
-        }
+        })
+        .catch(error => console.error('Error fetching lists:', error));
     }
 
-    updateLocalStorage() {
-        localStorage.setItem('myLists', JSON.stringify(this.lists));
+    setupEventListeners(listContainer, listId) {
+        // Add item functionality
+        const addItemButton = listContainer.querySelector('.addItemButton');
+        const itemNameInput = listContainer.querySelector('.itemName');
+        addItemButton.addEventListener('click', () => {
+            this.addItemToList(listId, itemNameInput.value);
+            itemNameInput.value = ''; // Clear input after adding
+        });
+    
+        // Move to completed functionality
+        listContainer.querySelectorAll('.active-item').forEach(itemElement => {
+            itemElement.addEventListener('click', () => {
+                const itemId = itemElement.getAttribute('data-item-id');
+                this.markItemAsCompleted(listId, itemId);
+            });
+        });
+    
+        // Return item to main list functionality
+        listContainer.querySelectorAll('.completed-item').forEach(itemElement => {
+            itemElement.addEventListener('click', () => {
+                const itemId = itemElement.getAttribute('data-item-id');
+                this.returnCompletedItemToMainList(listId, itemId);
+            });
+        });
     }
 
     renderLists() {
         const mainElement = document.querySelector('main');
-        // Clear current lists to re-render
         mainElement.querySelectorAll('.list-container').forEach(container => container.remove());
-
+    
         this.lists.forEach(list => {
             const listContainer = document.createElement('div');
             listContainer.className = 'list-container';
@@ -102,41 +120,19 @@ class MyList {
                         <input type="text" class="itemName" placeholder="item" />
                         <button type="button" class="addItemButton">Add</button>
                     </form>
-                    <ul class="list">
-                        ${list.myItems.map(item => `<li class="active-item">${item}</li>`).join('')}
+                    <ul class="list active-items">
+                        ${list.myItems.map(item => `<li class="active-item" data-item-id="${item.id}">${item.name}</li>`).join('')}
                     </ul>
                 </div>
                 <div>
                     <h3>Completed Items</h3>
-                    <ul class="list">
-                    ${list.myCompletedItems.map(item => `<li class="completed-item">${item}</li>`).join('')}
+                    <ul class="list completed-items">
+                    ${list.myCompletedItems.map(item => `<li class="completed-item" data-item-id="${item.id}">${item.name}</li>`).join('')}
                     </ul>
                 </div>
             `;
             mainElement.appendChild(listContainer);
-
-            // Add item functionality
-            listContainer.querySelector('.addItemButton').addEventListener('click', () => {
-                const itemNameInput = listContainer.querySelector('.itemName');
-                this.addItemToList(list.name, itemNameInput.value, itemNameInput); // Pass the input element as well
-                itemNameInput.value = ''; // Clear input after adding
-            });
-
-            // Move to completed functionality
-            listContainer.querySelectorAll('.active-item').forEach(itemElement => {
-                itemElement.addEventListener('click', () => {
-                    const itemName = itemElement.textContent;
-                    this.markItemAsCompleted(list.name, itemName);
-                });
-            });
-
-            // Return item to main list functionality
-            listContainer.querySelectorAll('.completed-item').forEach(itemElement => {
-                itemElement.addEventListener('click', () => {
-                    const itemName = itemElement.textContent;
-                    this.returnCompletedItemToMainList(list.name, itemName);
-                });
-            });
+            setupEventListeners(listContainer, list.id);
         });
     }
 }
