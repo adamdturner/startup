@@ -132,7 +132,7 @@ class MyList {
                 </div>
             `;
             mainElement.appendChild(listContainer);
-            setupEventListeners(listContainer, list.id);
+            this.setupEventListeners(listContainer, list.id);
         });
     }
 }
