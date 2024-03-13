@@ -30,8 +30,8 @@ const getMyLists = () => {
     // For now, this simply returns the in-memory storage
     return myLists;
 };
-
-function validateName(name, lists) {
+// Check if a list name is used or empty
+function validateListName(name, lists) {
     // Check if the name is empty or only whitespace
     if (!name.trim()) {
         return { isValid: false, message: "Name cannot be empty." };
@@ -46,6 +46,14 @@ function validateName(name, lists) {
     // If no issues, the name is valid
     return { isValid: true };
 }
+// Check if an item name is empty
+function validateNameNotEmpty(name) {
+    if (!name.trim()) {
+        return { isValid: false, message: "Name cannot be empty." };
+    }
+    return { isValid: true };
+}
+
 
 
 //                              List Endpoints here:
@@ -64,7 +72,7 @@ apiRouter.get('/myLists', (_req, res) => {
 // Create new group list
 apiRouter.post('/groupLists', (req, res) => {
     const { name } = req.body;
-    const validation = validateName(name, groupLists);
+    const validation = validateListName(name, groupLists);
     if (!validation.isValid) {
         return res.status(400).json({ message: validation.message });
     }
@@ -82,11 +90,10 @@ apiRouter.post('/groupLists', (req, res) => {
 // Create new personal list
 apiRouter.post('/myLists', (req, res) => {
     const { name } = req.body;
-    const validation = validateName(name, myLists);
+    const validation = validateListName(name, myLists);
     if (!validation.isValid) {
         return res.status(400).json({ message: validation.message });
     }
-
     const newList = {
         name,
         myItems: [],
@@ -102,19 +109,15 @@ apiRouter.post('/myLists', (req, res) => {
 //                              Item Endpoints here:
 // Add new item to group list
 apiRouter.post('/groupLists/:listId/items', (req, res) => {
-    const list = groupLists.concat(groupLists).find(list => list.id === req.params.listId);
+    const list = groupLists.find(list => list.id === req.params.listId);
     if (!list) {
         return res.status(404).json({ message: "List not found." });
     }
 
     const { name } = req.body;
-    const validation1 = validateName(name, groupLists.groupItems);
-    const validation2 = validateName(name, groupLists.groupCompletedItems);
-    if (!validation1.isValid) {
-        return res.status(400).json({ message: validation1.message });
-    }
-    if (!validation2.isValid) {
-        return res.status(400).json({ message: validation2.message });
+    const validation = validateNameNotEmpty(name);
+    if (!validation.isValid) {
+        return res.status(400).json({ message: validation.message });
     }
 
     const newItem = { id: generateUniqueId(), name }; // generateUniqueId is a placeholder for your ID generation logic
@@ -124,18 +127,14 @@ apiRouter.post('/groupLists/:listId/items', (req, res) => {
 
 // Add new item to personal list
 apiRouter.post('/myLists/:listId/items', (req, res) => {
-    const list = myLists.concat(myLists).find(list => list.id === req.params.listId);
+    const list = myLists.find(list => list.id === req.params.listId);
     if (!list) {
         return res.status(404).json({ message: "List not found." });
     }
     const { name } = req.body;
-    const validation1 = validateName(name, myLists.myItems);
-    const validation2 = validateName(name, myLists.myCompletedItems);
-    if (!validation1.isValid) {
-        return res.status(400).json({ message: validation1.message });
-    }
-    if (!validation2.isValid) {
-        return res.status(400).json({ message: validation2.message });
+    const validation = validateNameNotEmpty(name);
+    if (!validation.isValid) {
+        return res.status(400).json({ message: validation.message });
     }
 
     const newItem = { id: generateUniqueId(), name }; // generateUniqueId is a placeholder for your ID generation logic
@@ -146,7 +145,7 @@ apiRouter.post('/myLists/:listId/items', (req, res) => {
 
 // Update item within a group list
 apiRouter.put('/groupLists/:listId/items/:itemId', (req, res) => {
-    const list = groupLists.concat(groupLists).find(list => list.id === req.params.listId);
+    const list = groupLists.find(list => list.id === req.params.listId);
     if (!list) {
         return res.status(404).json({ message: "List not found." });
     }
@@ -157,13 +156,9 @@ apiRouter.put('/groupLists/:listId/items/:itemId', (req, res) => {
     }
 
     const { name } = req.body;
-    const validation1 = validateName(name, groupLists.groupItems);
-    const validation2 = validateName(name, groupLists.groupCompletedItems);
-    if (!validation1.isValid) {
-        return res.status(400).json({ message: validation1.message });
-    }
-    if (!validation2.isValid) {
-        return res.status(400).json({ message: validation2.message });
+    const validation = validateNameNotEmpty(name);
+    if (!validation.isValid) {
+        return res.status(400).json({ message: validation.message });
     }
 
     item.name = name; // Update the item's name
@@ -172,7 +167,7 @@ apiRouter.put('/groupLists/:listId/items/:itemId', (req, res) => {
 
 // Update item within a personal list
 apiRouter.put('/myLists/:listId/items/:itemId', (req, res) => {
-    const list = myLists.concat(myLists).find(list => list.id === req.params.listId);
+    const list = myLists.find(list => list.id === req.params.listId);
     if (!list) {
         return res.status(404).json({ message: "List not found." });
     }
@@ -183,13 +178,9 @@ apiRouter.put('/myLists/:listId/items/:itemId', (req, res) => {
     }
 
     const { name } = req.body;
-    const validation1 = validateName(name, myLists.myItems);
-    const validation2 = validateName(name, myLists.myCompletedItems);
-    if (!validation1.isValid) {
-        return res.status(400).json({ message: validation1.message });
-    }
-    if (!validation2.isValid) {
-        return res.status(400).json({ message: validation2.message });
+    const validation = validateNameNotEmpty(name);
+    if (!validation.isValid) {
+        return res.status(400).json({ message: validation.message });
     }
 
     item.name = name; // Update the item's name
@@ -201,13 +192,13 @@ apiRouter.put('/myLists/:listId/items/:itemId', (req, res) => {
 //                              Contributor Endpoints here:
 // Add contributor to list
 apiRouter.post('/lists/:listId/contributors', (req, res) => {
-    const list = groupLists.concat(groupLists).find(list => list.id === req.params.listId);
+    const list = groupLists.find(list => list.id === req.params.listId);
     if (!list) {
         return res.status(404).json({ message: "List not found." });
     }
 
     const { name } = req.body;
-    const validation = validateName(name,groupLists.listContributors);
+    const validation = validateNameNotEmpty(name);
     if (!validation.isValid) {
         return res.status(400).json({ message: validation.message });
     }
