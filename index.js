@@ -15,6 +15,7 @@ const apiRouter = express.Router();
 app.use(`/api`, apiRouter);
 
 
+//********************************** Mock Database and endpoints below ********************************//
 
 
 let groupLists = []; // This will act as our "database" for now
@@ -269,7 +270,7 @@ apiRouter.put('/myLists/:listId/reactivateItem/:itemId', (req, res) => {
 
   
 //                              Contributor Endpoints here:
-// Add contributor to list
+// Add contributor to group list
 apiRouter.post('/lists/:listId/contributors', (req, res) => {
     const list = groupLists.find(list => list.id === req.params.listId);
     if (!list) {
@@ -292,7 +293,7 @@ apiRouter.post('/lists/:listId/contributors', (req, res) => {
 });
 
 
-
+//********************************** End of endpoints **********************************//
 
 
 // Return the application's default page if the path is unknown
