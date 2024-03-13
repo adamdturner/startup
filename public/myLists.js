@@ -138,7 +138,7 @@ class MyList {
 }
 
 const myList = new MyList();
-myList.renderLists(); // Initial render
+myList.fetchAndRenderLists(); // Initial render
 
 document.getElementById('createMyListButton').addEventListener('click', () => {
     const myListNameInput = document.getElementById('myListName');

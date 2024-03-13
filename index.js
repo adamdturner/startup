@@ -17,6 +17,8 @@ app.use(`/api`, apiRouter);
 
 //********************************** Mock Database and endpoints below ********************************//
 
+// this is important for generating ID's for new items
+const { v4: uuidv4 } = require('uuid');
 
 let groupLists = []; // This will act as our "database" for now
 let myLists = []; // This will act as our "database" for now
@@ -37,13 +39,11 @@ function validateListName(name, lists) {
     if (!name.trim()) {
         return { isValid: false, message: "Name cannot be empty." };
     }
-
     // Check if the name is already taken
     const listExists = lists.some(list => list.name.trim().toLowerCase() === name.trim().toLowerCase());
     if (listExists) {
         return { isValid: false, message: "Name already exists." };
     }
-
     // If no issues, the name is valid
     return { isValid: true };
 }
@@ -95,10 +95,11 @@ apiRouter.post('/myLists', (req, res) => {
     if (!validation.isValid) {
         return res.status(400).json({ message: validation.message });
     }
-    const newList = {
-        name,
-        myItems: [],
-        myCompletedItems: [],
+    const newList = { 
+        id: uuidv4(), // Generates a unique identifier for the list
+        name, 
+        items: [], // Initialize an empty array for active items
+        myCompletedItems: [] // Initialize an empty array for completed items, if using separate arrays
     };
 
     myLists.push(newList);
@@ -121,7 +122,10 @@ apiRouter.post('/groupLists/:listId/items', (req, res) => {
         return res.status(400).json({ message: validation.message });
     }
 
-    const newItem = { id: generateUniqueId(), name }; // generateUniqueId is a placeholder for your ID generation logic
+    const newItem = {
+        id: uuidv4(), // Generates a unique identifier for the item
+        name: req.body.name,
+    };    
     list.items.push(newItem); // Assuming your list has an 'items' array
     res.status(201).json(newItem);
 });
@@ -138,7 +142,10 @@ apiRouter.post('/myLists/:listId/items', (req, res) => {
         return res.status(400).json({ message: validation.message });
     }
 
-    const newItem = { id: generateUniqueId(), name }; // generateUniqueId is a placeholder for your ID generation logic
+    const newItem = {
+        id: uuidv4(), // Generates a unique identifier for the item
+        name: req.body.name,
+    };    
     list.items.push(newItem); // Assuming your list has an 'items' array
     res.status(201).json(newItem);
 });
