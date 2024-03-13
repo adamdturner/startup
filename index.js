@@ -188,6 +188,85 @@ apiRouter.put('/myLists/:listId/items/:itemId', (req, res) => {
 });
 
 
+// Completing a group list item (move from main list to completed list)
+apiRouter.put('/groupLists/:listId/completeItem/:itemId', (req, res) => {
+    const list = groupLists.find(list => list.id === req.params.listId);
+    if (!list) {
+        return res.status(404).json({ message: "List not found." });
+    }
+
+    const itemIndex = list.groupItems.findIndex(item => item.id === req.params.itemId);
+    if (itemIndex === -1) {
+        return res.status(404).json({ message: "Item not found." });
+    }
+
+    // Move the item to completed items
+    const [completedItem] = list.groupItems.splice(itemIndex, 1);
+    list.groupCompletedItems.push(completedItem);
+
+    res.json({ message: "Item completed.", item: completedItem });
+});
+
+
+// Completing a personal list item (move from main list to completed list)
+apiRouter.put('/myLists/:listId/completeItem/:itemId', (req, res) => {
+    const list = myLists.find(list => list.id === req.params.listId);
+    if (!list) {
+        return res.status(404).json({ message: "List not found." });
+    }
+
+    const itemIndex = list.myItems.findIndex(item => item.id === req.params.itemId);
+    if (itemIndex === -1) {
+        return res.status(404).json({ message: "Item not found." });
+    }
+
+    // Move the item to completed items
+    const [completedItem] = list.myItems.splice(itemIndex, 1);
+    list.myCompletedItems.push(completedItem);
+
+    res.json({ message: "Item completed.", item: completedItem });
+});
+
+// Marking a group list item as incomplete again (move from completed list back to main list)
+apiRouter.put('/groupLists/:listId/reactivateItem/:itemId', (req, res) => {
+    const list = groupLists.find(list => list.id === req.params.listId);
+    if (!list) {
+        return res.status(404).json({ message: "List not found." });
+    }
+
+    const itemIndex = list.groupCompletedItems.findIndex(item => item.id === req.params.itemId);
+    if (itemIndex === -1) {
+        return res.status(404).json({ message: "Item not found." });
+    }
+
+    // Move the item back to active items
+    const [reactivatedItem] = list.groupCompletedItems.splice(itemIndex, 1);
+    list.groupItems.push(reactivatedItem);
+
+    res.json({ message: "Item reactivated.", item: reactivatedItem });
+});
+
+// Marking a personal list item as incomplete again (move from completed list back to main list)
+apiRouter.put('/myLists/:listId/reactivateItem/:itemId', (req, res) => {
+    const list = myLists.find(list => list.id === req.params.listId);
+    if (!list) {
+        return res.status(404).json({ message: "List not found." });
+    }
+
+    const itemIndex = list.myCompletedItems.findIndex(item => item.id === req.params.itemId);
+    if (itemIndex === -1) {
+        return res.status(404).json({ message: "Item not found." });
+    }
+
+    // Move the item back to active items
+    const [reactivatedItem] = list.myCompletedItems.splice(itemIndex, 1);
+    list.myItems.push(reactivatedItem);
+
+    res.json({ message: "Item reactivated.", item: reactivatedItem });
+});
+
+
+
   
 //                              Contributor Endpoints here:
 // Add contributor to list
