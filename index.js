@@ -68,7 +68,6 @@ apiRouter.post('/groupLists', (req, res) => {
     if (!validation.isValid) {
         return res.status(400).json({ message: validation.message });
     }
-
     const newList = {
         name,
         groupItems: [],
@@ -145,21 +144,82 @@ apiRouter.post('/myLists/:listId/items', (req, res) => {
 });
 
 
+// Update item within a group list
+apiRouter.put('/groupLists/:listId/items/:itemId', (req, res) => {
+    const list = groupLists.concat(groupLists).find(list => list.id === req.params.listId);
+    if (!list) {
+        return res.status(404).json({ message: "List not found." });
+    }
 
+    const item = list.items.find(item => item.id === req.params.itemId);
+    if (!item) {
+        return res.status(404).json({ message: "Item not found." });
+    }
 
-// Update item within a list
-apiRouter.put('/lists/:listId/items/:itemId', (req, res) => {
-  // Logic to update an item's details
-  res.json(updatedItem);
+    const { name } = req.body;
+    const validation1 = validateName(name, groupLists.groupItems);
+    const validation2 = validateName(name, groupLists.groupCompletedItems);
+    if (!validation1.isValid) {
+        return res.status(400).json({ message: validation1.message });
+    }
+    if (!validation2.isValid) {
+        return res.status(400).json({ message: validation2.message });
+    }
+
+    item.name = name; // Update the item's name
+    res.json(item);
 });
+
+// Update item within a personal list
+apiRouter.put('/myLists/:listId/items/:itemId', (req, res) => {
+    const list = myLists.concat(myLists).find(list => list.id === req.params.listId);
+    if (!list) {
+        return res.status(404).json({ message: "List not found." });
+    }
+
+    const item = list.items.find(item => item.id === req.params.itemId);
+    if (!item) {
+        return res.status(404).json({ message: "Item not found." });
+    }
+
+    const { name } = req.body;
+    const validation1 = validateName(name, myLists.myItems);
+    const validation2 = validateName(name, myLists.myCompletedItems);
+    if (!validation1.isValid) {
+        return res.status(400).json({ message: validation1.message });
+    }
+    if (!validation2.isValid) {
+        return res.status(400).json({ message: validation2.message });
+    }
+
+    item.name = name; // Update the item's name
+    res.json(item);
+});
+
+
   
 //                              Contributor Endpoints here:
 // Add contributor to list
 apiRouter.post('/lists/:listId/contributors', (req, res) => {
-  // Logic to add a contributor to a list
-  res.json(updatedListWithContributor);
-});
+    const list = groupLists.concat(groupLists).find(list => list.id === req.params.listId);
+    if (!list) {
+        return res.status(404).json({ message: "List not found." });
+    }
 
+    const { name } = req.body;
+    const validation = validateName(name,groupLists.listContributors);
+    if (!validation.isValid) {
+        return res.status(400).json({ message: validation.message });
+    }
+
+    // Assuming listContributors is an array of contributor names
+    if (!list.listContributors.includes(name)) {
+        list.listContributors.push(name);
+        res.status(201).json({ message: "Contributor added.", contributor: name });
+    } else {
+        res.status(409).json({ message: "Contributor already exists." });
+    }
+});
 
 
 
