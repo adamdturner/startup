@@ -14,6 +14,114 @@ app.use(express.static('public'));
 const apiRouter = express.Router();
 app.use(`/api`, apiRouter);
 
+
+
+
+let groupLists = []; // This will act as our "database" for now
+let myLists = []; // This will act as our "database" for now
+
+// Function to return all group lists (similar to retrieving from localStorage)
+const getGroupLists = () => {
+    // For now, this simply returns the in-memory storage
+    return groupLists;
+};
+// Function to return all personal lists (similar to retrieving from localStorage)
+const getMyLists = () => {
+    // For now, this simply returns the in-memory storage
+    return myLists;
+};
+
+function validateListName(name, lists) {
+    // Check if the name is empty or only whitespace
+    if (!name.trim()) {
+        return { isValid: false, message: "List name cannot be empty." };
+    }
+
+    // Check if the name is already taken
+    const listExists = lists.some(list => list.name.trim().toLowerCase() === name.trim().toLowerCase());
+    if (listExists) {
+        return { isValid: false, message: "A list with this name already exists." };
+    }
+
+    // If no issues, the name is valid
+    return { isValid: true };
+}
+
+
+//                              List Endpoints here:
+// Retrieve all group lists
+apiRouter.get('/groupLists', (_req, res) => {
+  const lists = getGroupLists(); // retrieve lists from in-memory storage
+  res.json(lists);
+});
+
+// Retrieve all personal lists
+apiRouter.get('/myLists', (_req, res) => {
+    const lists = getMyLists(); // retrieve lists from in-memory storage
+    res.json(lists);
+});
+
+// Create new group list
+apiRouter.post('/groupLists', (req, res) => {
+    const { name } = req.body;
+    const validation = validateListName(name, groupLists);
+    if (!validation.isValid) {
+        return res.status(400).json({ message: validation.message });
+    }
+
+    const newList = {
+        name,
+        groupItems: [],
+        groupCompletedItems: [],
+        listContributors: [],
+    };
+
+    groupLists.push(newList);
+    res.status(201).json(newList);
+});
+
+// Create new personal list
+apiRouter.post('/myLists', (req, res) => {
+    const { name } = req.body;
+    const validation = validateListName(name, myLists);
+    if (!validation.isValid) {
+        return res.status(400).json({ message: validation.message });
+    }
+
+    const newList = {
+        name,
+        myItems: [],
+        myCompletedItems: [],
+    };
+
+    myLists.push(newList);
+    res.status(201).json(newList);
+});
+
+
+
+//                              Item Endpoints here:
+// Add new item to list
+apiRouter.post('/lists/:listId/items', (req, res) => {
+  // Extract listId from URL params, and item details from req.body
+  // e.g., const updatedList = addItemToList(req.params.listId, req.body);
+  res.json(updatedList);
+});
+
+// Update item within a list
+apiRouter.put('/lists/:listId/items/:itemId', (req, res) => {
+  // Logic to update an item's details
+  res.json(updatedItem);
+});
+  
+//                              Contributor Endpoints here:
+// Add contributor to list
+apiRouter.post('/lists/:listId/contributors', (req, res) => {
+  // Logic to add a contributor to a list
+  res.json(updatedListWithContributor);
+});
+
+
 // Return the application's default page if the path is unknown
 app.use((_req, res) => {
   res.sendFile('index.html', { root: 'public' });
@@ -22,3 +130,4 @@ app.use((_req, res) => {
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
+
