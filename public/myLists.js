@@ -71,13 +71,19 @@ class MyList {
     
     fetchAndRenderLists() {
         fetch('/api/myLists')
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
             this.lists = data;
             this.renderLists();
         })
         .catch(error => console.error('Error fetching lists:', error));
     }
+    
 
     setupEventListeners(listContainer, listId) {
         // Add item functionality
@@ -110,6 +116,9 @@ class MyList {
         mainElement.querySelectorAll('.list-container').forEach(container => container.remove());
     
         this.lists.forEach(list => {
+            const items = list.items || []; // Updated to match the server's response
+            const myCompletedItems = list.myCompletedItems || [];
+    
             const listContainer = document.createElement('div');
             listContainer.className = 'list-container';
             listContainer.innerHTML = `
@@ -121,20 +130,20 @@ class MyList {
                         <button type="button" class="addItemButton">Add</button>
                     </form>
                     <ul class="list active-items">
-                        ${list.myItems.map(item => `<li class="active-item" data-item-id="${item.id}">${item.name}</li>`).join('')}
+                        ${items.map(item => `<li class="active-item" data-item-id="${item.id}">${item.name}</li>`).join('')}
                     </ul>
                 </div>
                 <div>
                     <h3>Completed Items</h3>
                     <ul class="list completed-items">
-                    ${list.myCompletedItems.map(item => `<li class="completed-item" data-item-id="${item.id}">${item.name}</li>`).join('')}
+                    ${myCompletedItems.map(item => `<li class="completed-item" data-item-id="${item.id}">${item.name}</li>`).join('')}
                     </ul>
                 </div>
             `;
             mainElement.appendChild(listContainer);
             this.setupEventListeners(listContainer, list.id);
         });
-    }
+    }        
 }
 
 const myList = new MyList();

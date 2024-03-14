@@ -78,12 +78,12 @@ apiRouter.post('/groupLists', (req, res) => {
         return res.status(400).json({ message: validation.message });
     }
     const newList = {
+        id: uuidv4(), // Generates a unique identifier for the list
         name,
         groupItems: [],
         groupCompletedItems: [],
         listContributors: [],
     };
-
     groupLists.push(newList);
     res.status(201).json(newList);
 });
@@ -101,7 +101,6 @@ apiRouter.post('/myLists', (req, res) => {
         items: [], // Initialize an empty array for active items
         myCompletedItems: [] // Initialize an empty array for completed items, if using separate arrays
     };
-
     myLists.push(newList);
     res.status(201).json(newList);
 });
@@ -223,13 +222,13 @@ apiRouter.put('/myLists/:listId/completeItem/:itemId', (req, res) => {
         return res.status(404).json({ message: "List not found." });
     }
 
-    const itemIndex = list.myItems.findIndex(item => item.id === req.params.itemId);
+    const itemIndex = list.items.findIndex(item => item.id === req.params.itemId);
     if (itemIndex === -1) {
         return res.status(404).json({ message: "Item not found." });
     }
 
     // Move the item to completed items
-    const [completedItem] = list.myItems.splice(itemIndex, 1);
+    const [completedItem] = list.items.splice(itemIndex, 1);
     list.myCompletedItems.push(completedItem);
 
     res.json({ message: "Item completed.", item: completedItem });
@@ -268,7 +267,7 @@ apiRouter.put('/myLists/:listId/reactivateItem/:itemId', (req, res) => {
 
     // Move the item back to active items
     const [reactivatedItem] = list.myCompletedItems.splice(itemIndex, 1);
-    list.myItems.push(reactivatedItem);
+    list.items.push(reactivatedItem);
 
     res.json({ message: "Item reactivated.", item: reactivatedItem });
 });
