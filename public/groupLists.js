@@ -12,9 +12,9 @@ function getUserName() {
 class GroupList {
 
     constructor() {
-        let storedLists = JSON.parse(localStorage.getItem('groupLists')) || [];
+        let storedGroupLists = JSON.parse(localStorage.getItem('groupLists')) || [];
         // Ensure each list has a 'completedItems' array
-        this.groupLists = storedLists.map(list => ({
+        this.groupLists = storedGroupLists.map(list => ({
             ...list,
             listContributors: list.listContributors || [],
             groupCompletedItems: list.groupCompletedItems || []
@@ -22,104 +22,142 @@ class GroupList {
     }
 
     createList(listName) {
-        // Check if the list already exists
-        const listExists = this.groupLists.some(list => list.name === listName);
-        if (!listExists) {
-            const newList = { name: listName, groupItems: [], groupCompletedItems: [], listContributors: [] };
-            var admin = getUserName() + " (Admin)";
-            newList.listContributors.push(admin);
-            this.groupLists.push(newList);
-            this.updateLocalStorage();
-            this.renderLists();
-        } else {
-            alert("A list with this name already exists.");
-        }
-    }
-
-    addItemToList(listName, itemName, itemNameInput) { // Assuming itemNameInput is the input element, if not, you'll need to retrieve it inside this method.
-        // Trim the itemName to remove leading and trailing whitespace
-        itemName = itemName.trim();
-        const list = this.groupLists.find(list => list.name === listName);
-        if (list) {
-            if (itemName.length > 0) {
-                const itemExists = list.groupItems.includes(itemName) || list.groupCompletedItems.includes(itemName);
-                if (!itemExists) {
-                    list.groupItems.push(itemName);
-                    this.updateLocalStorage();
-                    this.renderLists();
-                } else {
-                    alert("This item already exists in the list.");
-                }
+        fetch('/api/groupLists', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: listName })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert(data.message); // Handle errors or messages from the server
             } else {
-                alert("Item name cannot be empty.");
+                this.fetchAndRenderLists(); // re-fetch the lists from the server to update the UI
             }
-        }
-        // Clear the input field and set focus back to it
-        if (itemNameInput) {
-            itemNameInput.value = ''; // Clear input after adding or if the attempt was to add an empty item
-            itemNameInput.focus(); // Bring focus back to the input field for better user experience
-        }
+        })
+        .catch(error => console.error('Error creating list:', error));
     }
 
-    addContributor(listName, userName, userNameInput) {
-        // Trim the itemName to remove leading and trailing whitespace
-        userName = userName.trim();
-        const list = this.groupLists.find(list => list.name === listName);
-        if (list) {
-            if (userName.length > 0) {
-                const userExists = list.listContributors.includes(userName);
-                if (!userExists) {
-                    list.listContributors.push(userName);
-                    this.updateLocalStorage();
-                    this.renderLists();
-                } else {
-                    alert("This username already exists in the list.");
-                }
+    addItemToList(listId, itemName) {
+        fetch(`/api/groupLists/${listId}/groupItems`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: itemName })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.id) {
+                // Item was successfully created, now you have an ID for the new item
+                this.fetchAndRenderLists(); // Refresh or update your list display
+            }
+        });
+    }
+
+    // ***** consider adding id's to users to make it easier later in the authentication phase
+    addContributor(listId, userName) {
+        fetch(`/api/groupLists/${listId}/contributors`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: userName })
+        })
+        .then(response => {
+            // Check if the request was successful
+            if (response.ok) {
+                // The contributor was successfully added
+                this.fetchAndRenderLists(); // Refresh or update your list display
             } else {
-                alert("Username cannot be empty.");
+                // Handle non-successful responses
+                return response.json().then(data => {
+                    throw new Error(data.message || 'Failed to add contributor');
+                });
             }
-        }
-        // Clear the input field and set focus back to it
-        if (userNameInput) {
-            userNameInput.value = ''; // Clear input after adding or if the attempt was to add an empty item
-            userNameInput.focus(); // Bring focus back to the input field for better user experience
-        }
+        })
+        .catch(error => {
+            console.error('Error adding contributor:', error);
+        });
     }
-
-    markItemAsCompleted(listName, itemName) {
-        const list = this.groupLists.find(list => list.name === listName);
-        if (list) {
-            // Move item to completedItems
-            list.groupItems = list.groupItems.filter(item => item !== itemName);
-            list.groupCompletedItems.push(itemName);
-            
-            this.updateLocalStorage();
-            this.renderLists();
-        }
-    }
-
-    returnCompletedItemToMainList(listName, itemName) {
-        const list = this.groupLists.find(list => list.name === listName);
-        if (list) {
-            // Remove item from completedItems and add it back to items
-            list.groupCompletedItems = list.groupCompletedItems.filter(item => item !== itemName);
-            list.groupItems.push(itemName);
     
-            this.updateLocalStorage();
-            this.renderLists();
-        }
+
+    markItemAsCompleted(listId, itemId) {
+        fetch(`/api/groupLists/${listId}/completeItem/${itemId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(() => this.fetchAndRenderLists()) // Assuming you create a new method to fetch lists and render
+        .catch(error => console.error('Error completing item:', error));
     }
 
-    updateLocalStorage() {
-        localStorage.setItem('groupLists', JSON.stringify(this.groupLists));
+    returnCompletedItemToMainList(listId, itemId) {
+        fetch(`/api/groupLists/${listId}/reactivateItem/${itemId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(() => this.fetchAndRenderLists()) // Assuming you create a new method to fetch lists and render
+        .catch(error => console.error('Error reactivating item:', error));
+    }
+
+    fetchAndRenderLists() {
+        fetch('/api/groupLists')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            this.groupLists = data;
+            this.renderLists();
+        })
+        .catch(error => console.error('Error fetching lists:', error));
+    }
+
+    setupEventListeners(listContainer, listId) {
+        // Add item functionality
+        const addItemButton = listContainer.querySelector('.addItemButton');
+        const itemNameInput = listContainer.querySelector('.itemName');
+        addItemButton.addEventListener('click', () => {
+            this.addItemToList(listId, itemNameInput.value);
+            itemNameInput.value = ''; // Clear input after adding
+        });
+    
+        // Move to completed functionality
+        listContainer.querySelectorAll('.active-item').forEach(itemElement => {
+            itemElement.addEventListener('click', () => {
+                const itemId = itemElement.getAttribute('data-item-id');
+                this.markItemAsCompleted(listId, itemId);
+            });
+        });
+    
+        // Return item to main list functionality
+        listContainer.querySelectorAll('.completed-item').forEach(itemElement => {
+            itemElement.addEventListener('click', () => {
+                const itemId = itemElement.getAttribute('data-item-id');
+                this.returnCompletedItemToMainList(listId, itemId);
+            });
+        });
+
+        // Add contributor functionality
+        const userNameInput = listContainer.querySelector('.userName');
+        const addContributorButton = listContainer.querySelector('.addContributorButton');
+        if (addContributorButton) {
+            addContributorButton.addEventListener('click', () => {
+                this.addContributor(listId, userNameInput.value);
+                userNameInput.value = ''; // Clear input after adding
+            });
+        } else {
+            console.error('Add contributor button not found');
+        }
     }
 
     renderLists() {
         const mainElement = document.querySelector('main');
-        // Clear current lists to re-render
         mainElement.querySelectorAll('.list-container').forEach(container => container.remove());
-
+    
         this.groupLists.forEach(list => {
+            const groupItems = list.groupItems || []; // Assuming this is an array of objects
+            const groupCompletedItems = list.groupCompletedItems || []; // Assuming this as well
+            const listContributors = list.listContributors || []; // List of contributors
+    
             const listContainer = document.createElement('div');
             listContainer.className = 'list-container';
             listContainer.innerHTML = `
@@ -131,13 +169,13 @@ class GroupList {
                         <button type="button" class="addItemButton">Add</button>
                     </form>
                     <ul class="list">
-                        ${list.groupItems.map(item => `<li class="active-item">${item}</li>`).join('')}
+                        ${groupItems.map(item => `<li class="active-item" data-item-id="${item.id}">${item.name}</li>`).join('')}
                     </ul>
                 </div>
                 <div>
                     <h3>Completed Items</h3>
                     <ul class="list">
-                        ${list.groupCompletedItems.map(item => `<li class="completed-item">${item}</li>`).join('')}
+                        ${groupCompletedItems.map(item => `<li class="completed-item" data-item-id="${item.id}">${item.name}</li>`).join('')}
                     </ul>
                 </div>
                 <div>
@@ -148,48 +186,18 @@ class GroupList {
                         <button type="button" class="addContributorButton">Add</button>
                     </form>
                     <ul class="list">
-                        ${list.listContributors.map(item => `<li class="contributor">${item}</li>`).join('')}
+                        ${listContributors.map(contributor => `<li class="contributor">${contributor}</li>`).join('')}
                     </ul>
                 </div>
             `;
             mainElement.appendChild(listContainer);
-
-            // Add item functionality
-            listContainer.querySelector('.addItemButton').addEventListener('click', () => {
-                const itemNameInput = listContainer.querySelector('.itemName');
-                this.addItemToList(list.name, itemNameInput.value, itemNameInput); // Pass the input element as well
-                itemNameInput.value = ''; // Clear input after adding
-            });
-
-            // Move to completed functionality
-            listContainer.querySelectorAll('.active-item').forEach(itemElement => {
-                itemElement.addEventListener('click', () => {
-                    const itemName = itemElement.textContent;
-                    this.markItemAsCompleted(list.name, itemName);
-                });
-            });
-
-            // Return item to main list functionality
-            listContainer.querySelectorAll('.completed-item').forEach(itemElement => {
-                itemElement.addEventListener('click', () => {
-                    const itemName = itemElement.textContent;
-                    this.returnCompletedItemToMainList(list.name, itemName);
-                });
-            });
-
-            // Add contributor functionality
-            listContainer.querySelector('.addContributorButton').addEventListener('click', () => {
-                const userNameInput = listContainer.querySelector('.userName');
-                this.addContributor(list.name, userNameInput.value, userNameInput);
-                userNameInput.value = '';
-            })
-
+            this.setupEventListeners(listContainer, list.id);
         });
-    }
+    }    
 }
 
 const groupList = new GroupList();
-groupList.renderLists(); // Initial render
+groupList.fetchAndRenderLists(); // Initial render
 
 document.getElementById('createGroupListButton').addEventListener('click', () => {
     const listNameInput = document.getElementById('groupListName');

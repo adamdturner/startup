@@ -109,7 +109,7 @@ apiRouter.post('/myLists', (req, res) => {
 
 //                              Item Endpoints here:
 // Add new item to group list
-apiRouter.post('/groupLists/:listId/items', (req, res) => {
+apiRouter.post('/groupLists/:listId/groupItems', (req, res) => {
     const list = groupLists.find(list => list.id === req.params.listId);
     if (!list) {
         return res.status(404).json({ message: "List not found." });
@@ -125,7 +125,7 @@ apiRouter.post('/groupLists/:listId/items', (req, res) => {
         id: uuidv4(), // Generates a unique identifier for the item
         name: req.body.name,
     };    
-    list.items.push(newItem); // Assuming your list has an 'items' array
+    list.groupItems.push(newItem); // Assuming your list has an 'items' array
     res.status(201).json(newItem);
 });
 
@@ -157,7 +157,7 @@ apiRouter.put('/groupLists/:listId/items/:itemId', (req, res) => {
         return res.status(404).json({ message: "List not found." });
     }
 
-    const item = list.items.find(item => item.id === req.params.itemId);
+    const item = list.groupItems.find(item => item.id === req.params.itemId);
     if (!item) {
         return res.status(404).json({ message: "Item not found." });
     }
@@ -276,8 +276,8 @@ apiRouter.put('/myLists/:listId/reactivateItem/:itemId', (req, res) => {
 
   
 //                              Contributor Endpoints here:
-// Add contributor to group list
-apiRouter.post('/lists/:listId/contributors', (req, res) => {
+// Add contributor to group list *********** consider adding user id's later (like how items have an id) so that authentication is easier
+apiRouter.post('/groupLists/:listId/contributors', (req, res) => {
     const list = groupLists.find(list => list.id === req.params.listId);
     if (!list) {
         return res.status(404).json({ message: "List not found." });
