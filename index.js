@@ -57,7 +57,7 @@ function validateNameNotEmpty(name) {
 
 
 
-//                              List Endpoints here:
+//                        Endpoints for Lists are here:
 // Retrieve all group lists
 apiRouter.get('/groupLists', (_req, res) => {
   const lists = getGroupLists(); // retrieve lists from in-memory storage
@@ -107,7 +107,7 @@ apiRouter.post('/myLists', (req, res) => {
 
 
 
-//                              Item Endpoints here:
+//                              Endpoints for Items are here:
 // Add new item to group list
 apiRouter.post('/groupLists/:listId/groupItems', (req, res) => {
     const list = groupLists.find(list => list.id === req.params.listId);
@@ -275,7 +275,8 @@ apiRouter.put('/myLists/:listId/reactivateItem/:itemId', (req, res) => {
 
 
   
-//                              Contributor Endpoints here:
+//                              Endpoints for Contributors here:
+
 // Add contributor to group list *********** consider adding user id's later (like how items have an id) so that authentication is easier
 apiRouter.post('/groupLists/:listId/contributors', (req, res) => {
     const list = groupLists.find(list => list.id === req.params.listId);
