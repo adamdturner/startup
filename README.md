@@ -113,15 +113,19 @@ Simon - I deployed the Simon-service to my projects simon subdomain here: [Simon
 
 Startup - Here is a link to my startup application: [Startup](https://startup.adam260startup.click/)
 
-Create an HTTP service using Node.js and Express
+I set up node.js and express and created services for the various functions of my application.
 
-Frontend served up using Express static middleware
+You can see that the frontend is served up using Express static middleware. It should be easy to see in the top of the index.js file.
 
-Your frontend calls third party service endpoints
+My frontend calls my service endpoints. The application is a task manager, so there are endpoints for creating a list, adding an item
+to the list, marking an item complete, marking an item incomplete again, and for group lists you can add contributors by their username. Each time one of these
+endpoints are called, there is also an endpoint called to retrieve all lists and render all of them to the screen so that the user has the most up to date 
+lists displayed. I made each of these endpoints specific to whether or not it was for a group list or a personal list. The fetch calls for each api can be 
+seen in the myLists.js or groupLists.js files.
 
-Your backend provides service endpoints
+The index.js file contains all of the service endpoints in the backend.
 
-Your frontend calls your service endpoints
+Your frontend calls third party service endpoints - 
 
 ## 6. Login
 
