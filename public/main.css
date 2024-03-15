@@ -58,3 +58,20 @@ footer a {
     margin: 0 auto;
 }
 
+main p {
+  padding-top: 30px; /* Adjust the value as needed */
+}
+
+#randomActivityContainer {
+  text-align: center; /* Ensure text is centered within the div */
+  /* Additional styling for aesthetics */
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 80%; /* Or fixed width, e.g., 400px */
+  max-width: 600px; /* Optional: To prevent it from becoming too wide on large screens */
+  margin: auto; /* To horizontally center if using fixed width or max-width */
+}
+
+#randomActivityContainer p {
+  text-align: center;
+}
