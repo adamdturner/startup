@@ -125,7 +125,8 @@ seen in the myLists.js or groupLists.js files.
 
 The index.js file contains all of the service endpoints in the backend.
 
-Your frontend calls third party service endpoints - 
+My frontend calls the 3rd party API [Bored API](https://www.boredapi.com/api/activity) which displays an activity that someone could put on a to do list and it
+changes each time the about page is reloaded. You can see this API called in the about.js file. You can see more about bored API here: https://www.boredapi.com/
 
 ## 6. Login
 
