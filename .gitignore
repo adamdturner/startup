@@ -4,3 +4,6 @@ node_modules/
 dist/
 dbConfig.json
 mongoTest/
+authTest/
+package.json
+package-lock.json
