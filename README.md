@@ -128,7 +128,21 @@ The index.js file contains all of the service endpoints in the backend.
 My frontend calls the 3rd party API [Bored API](https://www.boredapi.com/api/activity) which displays an activity that someone could put on a to do list and it
 changes each time the about page is reloaded. You can see this API called in the about.js file. You can see more about bored API here: https://www.boredapi.com/
 
-## 6. Login
+## 6. Login Deliverable (Due March 22nd)
+
+Simon - I deployed the Simon-login to my projects simon subdomain here: [Simon](https://simon.adam260startup.click/)
+
+Startup - Here is a link to my startup application: [Startup](https://startup.adam260startup.click/)
+
+New User Registration - 
+
+Existing User Authentication - 
+
+Application Data Storage Using MongoDB - 
+
+Stores and Retrieves Credentials in MongoDB - 
+
+Restrics Functionality Based Upon Authentication - 
 
 ## 7. WebSocket
 
