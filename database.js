@@ -19,20 +19,20 @@ const groupListsCollection = db.collection('groupLists');
   process.exit(1);
 });
 
-function getUser(email) {
-  return userCollection.findOne({ email: email });
+async function getUser(userName) {
+  return userCollection.findOne({ userName: userName });
 }
 
-function getUserByToken(token) {
+async function getUserByToken(token) {
   return userCollection.findOne({ token: token });
 }
 
-async function createUser(email, password) {
+async function createUser(userName, password) {
   // Hash the password before we insert it into the database
   const passwordHash = await bcrypt.hash(password, 10);
 
   const user = {
-    email: email,
+    userName: userName,
     password: passwordHash,
     token: uuidv4(),
   };
@@ -41,3 +41,8 @@ async function createUser(email, password) {
   return user;
 }
 
+module.exports = {
+  getUser,
+  getUserByToken,
+  createUser,
+};

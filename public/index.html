@@ -10,7 +10,7 @@
     <link rel="icon" href="icon.ico" />
 
     <!-- include link to main.css and session.js -->
-    <script src="session.js"></script>
+    <script defer src="session.js"></script>
     <link rel="stylesheet" href="main.css" />
 
     <!-- include link to bootstrap -->
@@ -43,7 +43,7 @@
             <input type="text" id="userName" placeholder="Your name here" />
         </div>
         <div>
-            <label for="password">Password</label>
+            <label for="userPassword">Password</label>
             <input type="password" id="userPassword" placeholder="Your password here" />
         </div>
         <div>
@@ -53,9 +53,11 @@
       </div>
       <!-- Shown when someone has already logged in -->
       <div id="LoggedIn" style="display: none">
+        <div id="user"></div>
         <div>
-          <button onclick="showMyLists()" class="btn btn-primary">My Lists</button>
+          <button onclick="showMyLists()" class="btn btn-secondary">My Lists</button>
           <button onclick="showGroupLists()" class="btn btn-secondary">Group Lists</button>
+          <button onclick="logout()" class="btn btn-primary">Logout</button>
         </div>
       </div>
     </main>
