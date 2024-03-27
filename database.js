@@ -19,6 +19,8 @@ const groupListsCollection = db.collection('groupLists');
   process.exit(1);
 });
 
+// database functions for users:
+
 async function getUser(userName) {
   return userCollection.findOne({ userName: userName });
 }
@@ -41,8 +43,47 @@ async function createUser(userName, password) {
   return user;
 }
 
+// database functions for lists:
+
+async function createList(collection, listData) {
+  await db.collection(collection).insertOne(listData);
+  return listData; // Return the list with MongoDB generated _id
+}
+
+async function getListsForUser(userId) {
+  return await myListsCollection.find({ userId: userId }).toArray();
+}
+
+async function getGroupListsForUser(userId) {
+  return await groupListsCollection.find({
+    $or: [
+      { userId: userId }, // Lists created by the user
+      { listContributors: userId } // Lists where the user is a contributor
+    ]
+  }).toArray();
+}
+
+async function updateList(collection, listId, updates) {
+  const { value } = await db.collection(collection).findOneAndUpdate(
+    { _id: listId },
+    { $set: updates },
+    { returnDocument: 'after' } // This option returns the document after update
+  );
+  return value;
+}
+
+async function deleteList(collection, listId) {
+  await db.collection(collection).deleteOne({ _id: listId });
+}
+
 module.exports = {
   getUser,
   getUserByToken,
   createUser,
+
+  createList,
+  getListsForUser,
+  getGroupListsForUser,
+  updateList,
+  deleteList,
 };

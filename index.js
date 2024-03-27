@@ -30,20 +30,9 @@ app.use(`/api`, apiRouter);
 // this is important for generating ID's for new items
 const { v4: uuidv4 } = require('uuid');
 
+// going to delete these two arrays once the whole database functionality is implemented
 let groupLists = []; // This will act as our "database" for now
 let myLists = []; // This will act as our "database" for now
-
-// Function to return all group lists (similar to retrieving from localStorage)
-const getGroupLists = () => {
-  // For now, this simply returns the in-memory storage
-  return groupLists;
-};
-// Function to return all personal lists (similar to retrieving from localStorage)
-const getMyLists = () => {
-  // For now, this simply returns the in-memory storage
-  return myLists;
-};
-
 
 
 // CreateAuth token for a new user
@@ -124,50 +113,99 @@ function validateNameNotEmpty(name) {
 
 //                        Endpoints for Lists are here:
 // Retrieve all group lists
-apiRouter.get('/groupLists', (_req, res) => {
-  const lists = getGroupLists(); // retrieve lists from in-memory storage
-  res.json(lists);
-});
+apiRouter.get('/groupLists', async (req, res) => {
+    // Extract the authToken from the request cookies
+    const authToken = req.cookies[authCookieName];
+    try {
+      // Retrieve the user based on the authToken
+      const user = await DB.getUserByToken(authToken);
+      if (!user) {
+        return res.status(401).send({ msg: 'Unauthorized' });
+      }
+      // Use the user's _id to fetch group lists where they are a contributor or owner
+      const lists = await DB.getGroupListsForUser(user._id);
+      res.json(lists);
+    } catch (error) {
+      console.error('Failed to retrieve groupLists:', error);
+      res.status(500).send({ msg: 'Failed to retrieve lists' });
+    }
+  });
 
 // Retrieve all personal lists
-apiRouter.get('/myLists', (_req, res) => {
-  const lists = getMyLists(); // retrieve lists from in-memory storage
-  res.json(lists);
+apiRouter.get('/myLists', async (req, res) => {
+  // Extract the authToken from the request cookies
+  const authToken = req.cookies[authCookieName];
+  try {
+    // Retrieve the user based on the authToken
+    const user = await DB.getUserByToken(authToken);
+    if (!user) {
+      return res.status(401).send({ msg: 'Unauthorized' });
+    }
+    // Use the user's _id to fetch their personal lists
+    const lists = await DB.getListsForUser(user._id);
+    res.json(lists);
+  } catch (error) {
+    console.error('Failed to retrieve myLists:', error);
+    res.status(500).send({ msg: 'Failed to retrieve lists' });
+  }
 });
 
 // Create new group list
-apiRouter.post('/groupLists', (req, res) => {
-  const { name } = req.body;
-  const validation = validateListName(name, groupLists);
-  if (!validation.isValid) {
-      return res.status(400).json({ message: validation.message });
-  }
-  const newList = {
-      id: uuidv4(), // Generates a unique identifier for the list
-      name,
-      groupItems: [],
-      groupCompletedItems: [],
-      listContributors: [],
-  };
-  groupLists.push(newList);
-  res.status(201).json(newList);
-});
+apiRouter.post('/groupLists', async (req, res) => {
+    try {
+      const user = await DB.getUserByToken(req.cookies[authCookieName]);
+      if (!user) {
+        return res.status(401).send({ msg: 'Unauthorized' });
+      }
+      const { name } = req.body;
+      const validation = validateListName(name, await DB.getGroupListsForUser(user._id));
+      if (!validation.isValid) {
+          return res.status(400).json({ message: validation.message });
+      }
+      // Construct the new list document
+      const newList = {
+        _id: uuidv4(),
+        name,
+        groupItems: [], // Initialize with any structure you deem necessary
+        groupCompletedItems: [], // Initialize with any structure you deem necessary
+        listContributors: [user._id], // Initially, the list includes only the creator as a contributor
+        userId: user._id, // This associates the list with the user who created it
+      };
+      // Insert the new list into the database
+      await DB.createList('groupLists', newList); // Make sure this function is implemented in database.js
+      res.status(201).json(newList);
+    } catch (error) {
+      console.error('Failed to create groupList:', error);
+      res.status(500).send({ msg: 'Failed to create list' });
+    }
+  });
 
-// Create new personal list
-apiRouter.post('/myLists', (req, res) => {
-  const { name } = req.body;
-  const validation = validateListName(name, myLists);
-  if (!validation.isValid) {
-      return res.status(400).json({ message: validation.message });
+// Create new personal list with userId
+apiRouter.post('/myLists', async (req, res) => {
+  try {
+    const user = await DB.getUserByToken(req.cookies[authCookieName]);
+    if (!user) {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
+    const { name } = req.body;
+    const validation = validateListName(name, myLists);
+    if (!validation.isValid) {
+        return res.status(400).json({ message: validation.message });
+    }
+    const newList = { 
+        _id: uuidv4(), 
+        name, 
+        items: [], 
+        myCompletedItems: [],
+        userId: user._id // Associate list with userId
+    };
+    // Insert the new list into the database
+    await DB.createList('myLists', newList); // Make sure this function is implemented in database.js
+    res.status(201).json(newList);
+  } catch (error) {
+    console.error('Failed to create personal list:', error);
+    res.status(500).send({ msg: 'Failed to create list' });
   }
-  const newList = { 
-      id: uuidv4(), // Generates a unique identifier for the list
-      name, 
-      items: [], // Initialize an empty array for active items
-      myCompletedItems: [] // Initialize an empty array for completed items, if using separate arrays
-  };
-  myLists.push(newList);
-  res.status(201).json(newList);
 });
 
 
