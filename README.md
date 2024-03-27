@@ -145,7 +145,10 @@ Application Data Storage Using MongoDB - there is a database.js file that connec
 
 Stores and Retrieves Credentials in MongoDB - There is a collection of users used to store user information including usernames and their hashed passwords.
 
-Restrics Functionality Based Upon Authentication - 
+Restrics Functionality Based Upon Authentication - Once logged in, you can create a list in the personal list page or the group list page. The functionality for
+adding contributors to group lists will be added later and will have websocket notifications when users contribute to group lists. If you log out, you can log in
+to a different user and you will notice the lists you created for the other user don't appear. Lists are unique to the user that created them and the user must be
+authenticated to see them.
 
 ## 7. WebSocket
 
