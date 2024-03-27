@@ -134,13 +134,16 @@ Simon - I deployed the Simon-login to my projects simon subdomain here: [Simon](
 
 Startup - Here is a link to my startup application: [Startup](https://startup.adam260startup.click/)
 
-New User Registration - 
+New User Registration - You can create a new user by typing in a username and a password. Any username/password combo will work when creating a new user, provided
+that the username is not already in use. You can test this by typing in a name and password and clicking create. Verify that you cannot create a new user with the 
+same name by logging out and trying again with the same name and different password.
 
-Existing User Authentication - 
+Existing User Authentication - Once a user has been created with a username and password, they may choose to logout of the application. If they want to log back in
+they must type in the same username and password combo. If they forget their password, there is no way to retrieve it or change it.
 
-Application Data Storage Using MongoDB - 
+Application Data Storage Using MongoDB - there is a database.js file that connects to mongodb to store data.
 
-Stores and Retrieves Credentials in MongoDB - 
+Stores and Retrieves Credentials in MongoDB - There is a collection of users used to store user information including usernames and their hashed passwords.
 
 Restrics Functionality Based Upon Authentication - 
 
