@@ -86,6 +86,8 @@ secureApiRouter.use(async (req, res, next) => {
 
 
 
+// may not need the following two functions later on
+
 
 // Check if a list name is used or empty
 function validateListName(name, lists) {
@@ -101,6 +103,7 @@ function validateListName(name, lists) {
   // If no issues, the name is valid
   return { isValid: true };
 }
+
 // Check if an item name is empty
 function validateNameNotEmpty(name) {
   if (!name.trim()) {
@@ -108,6 +111,9 @@ function validateNameNotEmpty(name) {
   }
   return { isValid: true };
 }
+
+
+
 
 
 
