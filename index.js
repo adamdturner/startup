@@ -172,8 +172,8 @@ apiRouter.post('/groupLists', async (req, res) => {
       const newList = {
         _id: uuidv4(),
         name,
-        groupItems: [], // Initialize with any structure you deem necessary
-        groupCompletedItems: [], // Initialize with any structure you deem necessary
+        items: [], // Initialize with any structure you deem necessary
+        completedItems: [], // Initialize with any structure you deem necessary
         listContributors: [user._id], // Initially, the list includes only the creator as a contributor
         userId: user._id, // This associates the list with the user who created it
       };
@@ -202,7 +202,7 @@ apiRouter.post('/myLists', async (req, res) => {
         _id: uuidv4(), 
         name, 
         items: [], 
-        myCompletedItems: [],
+        completedItems: [],
         userId: user._id // Associate list with userId
     };
     // Insert the new list into the database
@@ -218,25 +218,38 @@ apiRouter.post('/myLists', async (req, res) => {
 
 //                              Endpoints for Items are here:
 // Add new item to group list
-apiRouter.post('/groupLists/:listId/groupItems', (req, res) => {
-  const list = groupLists.find(list => list.id === req.params.listId);
-  if (!list) {
-      return res.status(404).json({ message: "List not found." });
+apiRouter.post('/groupLists/:listId/items', async (req, res) => {
+  const authToken = req.cookies[authCookieName];
+  const user = await DB.getUserByToken(authToken);
+  if (!user) {
+    return res.status(401).json({ message: "Unauthorized" });
   }
-
   const { name } = req.body;
   const validation = validateNameNotEmpty(name);
   if (!validation.isValid) {
-      return res.status(400).json({ message: validation.message });
+    return res.status(400).json({ message: validation.message });
   }
-
-  const newItem = {
+  try {
+    const list = await DB.getListById('groupLists', req.params.listId, user._id);
+    if (!list) {
+      return res.status(404).json({ message: "List not found." });
+    }
+    // Ensure the user is either the creator or a contributor of the list
+    if (list.userId.toString() !== user._id.toString() && !list.listContributors.includes(user._id.toString())) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+    const newItem = {
       id: uuidv4(), // Generates a unique identifier for the item
-      name: req.body.name,
-  };    
-  list.groupItems.push(newItem); // Assuming your list has an 'items' array
-  res.status(201).json(newItem);
+      name,
+    };
+    await DB.addItemToList('groupLists', list._id, newItem);
+    res.status(201).json(newItem);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
 });
+
 
 // Add new item to personal list
 apiRouter.post('/myLists/:listId/items', async (req, res) => {
@@ -276,7 +289,7 @@ apiRouter.put('/groupLists/:listId/items/:itemId', (req, res) => {
       return res.status(404).json({ message: "List not found." });
   }
 
-  const item = list.groupItems.find(item => item.id === req.params.itemId);
+  const item = list.items.find(item => item.id === req.params.itemId);
   if (!item) {
       return res.status(404).json({ message: "Item not found." });
   }
@@ -315,22 +328,36 @@ apiRouter.put('/myLists/:listId/items/:itemId', (req, res) => {
 
 
 // Completing a group list item (move from main list to completed list)
-apiRouter.put('/groupLists/:listId/completeItem/:itemId', (req, res) => {
-  const list = groupLists.find(list => list.id === req.params.listId);
-  if (!list) {
+apiRouter.put('/groupLists/:listId/completeItem/:itemId', async (req, res) => {
+  const authToken = req.cookies[authCookieName];
+  const user = await DB.getUserByToken(authToken);
+  if (!user) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+  try {
+    // Fetch the list to ensure the user has rights to modify it
+    const list = await DB.getListById('groupLists', req.params.listId, user._id);
+    if (!list) {
       return res.status(404).json({ message: "List not found." });
+    }
+
+    // Verify user is either creator or a contributor
+    if (list.userId.toString() !== user._id.toString() && !list.listContributors.includes(user._id.toString())) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    // Move the item to completedItems
+    const updateResult = await DB.moveItemToCompleted('groupLists', req.params.listId, req.params.itemId, user._id);
+
+    if (!updateResult) {
+      return res.status(404).json({ message: "Item or list not found." });
+    }
+
+    res.json({ message: "Item completed.", item: updateResult });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
   }
-
-  const itemIndex = list.groupItems.findIndex(item => item.id === req.params.itemId);
-  if (itemIndex === -1) {
-      return res.status(404).json({ message: "Item not found." });
-  }
-
-  // Move the item to completed items
-  const [completedItem] = list.groupItems.splice(itemIndex, 1);
-  list.groupCompletedItems.push(completedItem);
-
-  res.json({ message: "Item completed.", item: completedItem });
 });
 
 
@@ -338,11 +365,9 @@ apiRouter.put('/groupLists/:listId/completeItem/:itemId', (req, res) => {
 apiRouter.put('/myLists/:listId/completeItem/:itemId', async (req, res) => {
   const authToken = req.cookies[authCookieName];
   const user = await DB.getUserByToken(authToken);
-
   if (!user) {
     return res.status(401).json({ message: "Unauthorized" });
   }
-
   try {
     const updateResult = await DB.moveItemToCompleted('myLists', req.params.listId, req.params.itemId, user._id);
 

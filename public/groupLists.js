@@ -17,7 +17,7 @@ class GroupList {
         this.groupLists = storedGroupLists.map(list => ({
             ...list,
             listContributors: list.listContributors || [],
-            groupCompletedItems: list.groupCompletedItems || []
+            completedItems: list.completedItems || []
         }));
     }
 
@@ -39,7 +39,7 @@ class GroupList {
     }
 
     addItemToList(listId, itemName) {
-        fetch(`/api/groupLists/${listId}/groupItems`, {
+        fetch(`/api/groupLists/${listId}/items`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name: itemName })
@@ -154,8 +154,8 @@ class GroupList {
         mainElement.querySelectorAll('.list-container').forEach(container => container.remove());
     
         this.groupLists.forEach(list => {
-            const groupItems = list.groupItems || []; // Assuming this is an array of objects
-            const groupCompletedItems = list.groupCompletedItems || []; // Assuming this as well
+            const items = list.items || []; // Assuming this is an array of objects
+            const completedItems = list.completedItems || []; // Assuming this as well
             const listContributors = list.listContributors || []; // List of contributors
     
             const listContainer = document.createElement('div');
@@ -169,13 +169,13 @@ class GroupList {
                         <button type="button" class="addItemButton">Add</button>
                     </form>
                     <ul class="list">
-                        ${groupItems.map(item => `<li class="active-item" data-item-id="${item.id}">${item.name}</li>`).join('')}
+                        ${items.map(item => `<li class="active-item" data-item-id="${item.id}">${item.name}</li>`).join('')}
                     </ul>
                 </div>
                 <div>
                     <h3>Completed Items</h3>
                     <ul class="list">
-                        ${groupCompletedItems.map(item => `<li class="completed-item" data-item-id="${item.id}">${item.name}</li>`).join('')}
+                        ${completedItems.map(item => `<li class="completed-item" data-item-id="${item.id}">${item.name}</li>`).join('')}
                     </ul>
                 </div>
                 <div>
@@ -191,7 +191,7 @@ class GroupList {
                 </div>
             `;
             mainElement.appendChild(listContainer);
-            this.setupEventListeners(listContainer, list.id);
+            this.setupEventListeners(listContainer, list._id);
         });
     }    
 }

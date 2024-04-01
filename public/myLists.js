@@ -15,7 +15,7 @@ class MyList {
         // Ensure each list has a 'completedItems' array
         this.lists = storedPersonalLists.map(list => ({
             ...list,
-            myCompletedItems: list.myCompletedItems || []
+            completedItems: list.completedItems || []
         }));
     }
     
@@ -117,7 +117,7 @@ class MyList {
     
         this.lists.forEach(list => {
             const items = list.items || []; // Updated to match the server's response
-            const myCompletedItems = list.myCompletedItems || [];
+            const completedItems = list.completedItems || [];
     
             const listContainer = document.createElement('div');
             listContainer.className = 'list-container';
@@ -136,7 +136,7 @@ class MyList {
                 <div>
                     <h3>Completed Items</h3>
                     <ul class="list completed-items">
-                    ${myCompletedItems.map(item => `<li class="completed-item" data-item-id="${item.id}">${item.name}</li>`).join('')}
+                    ${completedItems.map(item => `<li class="completed-item" data-item-id="${item.id}">${item.name}</li>`).join('')}
                     </ul>
                 </div>
             `;

@@ -113,7 +113,7 @@ async function moveItemToCompleted(collectionName, listId, itemId, userId) {
     if (itemToMove) {
       const pushResult = await db.collection(collectionName).updateOne(
         { _id: listId },
-        { $push: { myCompletedItems: itemToMove } } // Use the correct array based on your schema
+        { $push: { completedItems: itemToMove } } // Use the correct array based on your schema
       );
       return pushResult.modifiedCount === 1 ? itemToMove : null;
     }
