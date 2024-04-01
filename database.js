@@ -168,7 +168,15 @@ async function updateItemName(collectionName, listId, itemId, newName, userId) {
   return result.modifiedCount === 1;
 }
 
+// database function for adding contributors to group lists:
 
+// database.js
+async function addContributorToList(collectionName, listId, userIdToAdd) {
+  await db.collection(collectionName).updateOne(
+      { _id: listId },
+      { $addToSet: { listContributors: userIdToAdd } } // Use $addToSet to avoid duplicates
+  );
+}
 
 
 module.exports = {
@@ -186,5 +194,7 @@ module.exports = {
   addItemToList,
   moveItemToCompleted,
   reactivateItem,
-  updateItemName
+  updateItemName,
+
+  addContributorToList
 };

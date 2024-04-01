@@ -449,27 +449,41 @@ apiRouter.put('/myLists/:listId/reactivateItem/:itemId', async (req, res) => {
   
 //                              Endpoints for Contributors here:
 
-// Add contributor to group list *********** consider adding user id's later (like how items have an id) so that authentication is easier
-apiRouter.post('/groupLists/:listId/contributors', (req, res) => {
-  const list = groupLists.find(list => list.id === req.params.listId);
-  if (!list) {
+// Add contributor to group list
+apiRouter.post('/groupLists/:listId/contributors', async (req, res) => {
+  const authToken = req.cookies[authCookieName];
+  const user = await DB.getUserByToken(authToken);
+  if (!user) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+  const userNameToAdd = req.body.name;
+  // Look up the user to be added as a contributor
+  const userToAdd = await DB.getUser(userNameToAdd);
+  if (!userToAdd) {
+    return res.status(404).json({ message: "User not found." });
+  }
+  try {
+    const listId = req.params.listId;
+    // Fetch the list to see if the user to add is already a contributor
+    const list = await DB.getListById('groupLists', listId, user._id);
+
+    if (!list) {
       return res.status(404).json({ message: "List not found." });
-  }
+    }
 
-  const { name } = req.body;
-  const validation = validateNameNotEmpty(name);
-  if (!validation.isValid) {
-      return res.status(400).json({ message: validation.message });
-  }
+    if (list.listContributors.includes(userToAdd._id)) {
+      return res.status(409).json({ message: "Contributor already exists." });
+    }
 
-  // Assuming listContributors is an array of contributor names
-  if (!list.listContributors.includes(name)) {
-      list.listContributors.push(name);
-      res.status(201).json({ message: "Contributor added.", contributor: name });
-  } else {
-      res.status(409).json({ message: "Contributor already exists." });
+    // Add the user to the list of contributors
+    await DB.addContributorToList('groupLists', listId, userToAdd._id);
+    res.status(201).json({ message: "Contributor added." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
   }
 });
+
 
 
 //********************************** End of endpoints **********************************//
