@@ -150,7 +150,19 @@ adding contributors to group lists will be added later and will have websocket n
 to a different user and you will notice the lists you created for the other user don't appear. Lists are unique to the user that created them and the user must be
 authenticated to see them. Try just creating a user and creating a few lists then log out and do it again with another user.
 
-## 7. WebSocket
+## 7. WebSocket Deliverable (Due March 29th)
+
+Simon - I deployed the Simon-login to my projects simon subdomain here: [Simon](https://simon.adam260startup.click/)
+
+Startup - Here is a link to my startup application: [Startup](https://startup.adam260startup.click/)
+
+Backend listens for WebSocket connection -
+
+Frontend makes WebSocket connection -
+
+Data sent over WebSocket connection -
+
+WebSocket data displayed in the application interface -
 
 ## 8. React
 
