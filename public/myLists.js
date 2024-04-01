@@ -141,7 +141,7 @@ class MyList {
                 </div>
             `;
             mainElement.appendChild(listContainer);
-            this.setupEventListeners(listContainer, list.id);
+            this.setupEventListeners(listContainer, list._id);
         });
     }        
 }

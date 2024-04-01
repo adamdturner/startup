@@ -239,24 +239,34 @@ apiRouter.post('/groupLists/:listId/groupItems', (req, res) => {
 });
 
 // Add new item to personal list
-apiRouter.post('/myLists/:listId/items', (req, res) => {
-  const list = myLists.find(list => list.id === req.params.listId);
-  if (!list) {
-      return res.status(404).json({ message: "List not found." });
+apiRouter.post('/myLists/:listId/items', async (req, res) => {
+  const authToken = req.cookies[authCookieName];
+  const user = await DB.getUserByToken(authToken);
+  if (!user) {
+    return res.status(401).json({ message: "Unauthorized" });
   }
   const { name } = req.body;
   const validation = validateNameNotEmpty(name);
   if (!validation.isValid) {
-      return res.status(400).json({ message: validation.message });
+    return res.status(400).json({ message: validation.message });
   }
-
-  const newItem = {
+  try {
+    const list = await DB.getListById('myLists', req.params.listId, user._id);
+    if (!list) {
+      return res.status(404).json({ message: "List not found." });
+    }
+    const newItem = {
       id: uuidv4(), // Generates a unique identifier for the item
-      name: req.body.name,
-  };    
-  list.items.push(newItem); // Assuming your list has an 'items' array
-  res.status(201).json(newItem);
+      name,
+    };
+    await DB.addItemToList('myLists', list._id, newItem);
+    res.status(201).json(newItem);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
 });
+
 
 
 // Update item within a group list
@@ -325,22 +335,26 @@ apiRouter.put('/groupLists/:listId/completeItem/:itemId', (req, res) => {
 
 
 // Completing a personal list item (move from main list to completed list)
-apiRouter.put('/myLists/:listId/completeItem/:itemId', (req, res) => {
-  const list = myLists.find(list => list.id === req.params.listId);
-  if (!list) {
-      return res.status(404).json({ message: "List not found." });
+apiRouter.put('/myLists/:listId/completeItem/:itemId', async (req, res) => {
+  const authToken = req.cookies[authCookieName];
+  const user = await DB.getUserByToken(authToken);
+
+  if (!user) {
+    return res.status(401).json({ message: "Unauthorized" });
   }
 
-  const itemIndex = list.items.findIndex(item => item.id === req.params.itemId);
-  if (itemIndex === -1) {
-      return res.status(404).json({ message: "Item not found." });
+  try {
+    const updateResult = await DB.moveItemToCompleted('myLists', req.params.listId, req.params.itemId, user._id);
+
+    if (!updateResult) {
+      return res.status(404).json({ message: "Item or list not found." });
+    }
+
+    res.json({ message: "Item completed.", item: updateResult });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
   }
-
-  // Move the item to completed items
-  const [completedItem] = list.items.splice(itemIndex, 1);
-  list.myCompletedItems.push(completedItem);
-
-  res.json({ message: "Item completed.", item: completedItem });
 });
 
 // Marking a group list item as incomplete again (move from completed list back to main list)
