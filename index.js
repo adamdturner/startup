@@ -158,33 +158,33 @@ apiRouter.get('/myLists', async (req, res) => {
 
 // Create new group list
 apiRouter.post('/groupLists', async (req, res) => {
-    try {
-      const user = await DB.getUserByToken(req.cookies[authCookieName]);
-      if (!user) {
-        return res.status(401).send({ msg: 'Unauthorized' });
-      }
-      const { name } = req.body;
-      const validation = validateListName(name, await DB.getGroupListsForUser(user._id));
-      if (!validation.isValid) {
-          return res.status(400).json({ message: validation.message });
-      }
-      // Construct the new list document
-      const newList = {
-        _id: uuidv4(),
-        name,
-        items: [], // Initialize with any structure you deem necessary
-        completedItems: [], // Initialize with any structure you deem necessary
-        listContributors: [user._id], // Initially, the list includes only the creator as a contributor
-        userId: user._id, // This associates the list with the user who created it
-      };
-      // Insert the new list into the database
-      await DB.createList('groupLists', newList); // Make sure this function is implemented in database.js
-      res.status(201).json(newList);
-    } catch (error) {
-      console.error('Failed to create groupList:', error);
-      res.status(500).send({ msg: 'Failed to create list' });
+  try {
+    const user = await DB.getUserByToken(req.cookies[authCookieName]);
+    if (!user) {
+      return res.status(401).send({ msg: 'Unauthorized' });
     }
-  });
+    const { name } = req.body;
+    const validation = validateListName(name, await DB.getGroupListsForUser(user._id));
+    if (!validation.isValid) {
+        return res.status(400).json({ message: validation.message });
+    }
+    // Construct the new list document
+    const newList = {
+      _id: uuidv4(),
+      name,
+      items: [], // Initialize with any structure you deem necessary
+      completedItems: [], // Initialize with any structure you deem necessary
+      listContributors: [user._id], // Initially, the list includes only the creator as a contributor (TODO use userName instead of user._id)
+      userId: user._id, // This associates the list with the user who created it
+    };
+    // Insert the new list into the database
+    await DB.createList('groupLists', newList); // Make sure this function is implemented in database.js
+    res.status(201).json(newList);
+  } catch (error) {
+    console.error('Failed to create groupList:', error);
+    res.status(500).send({ msg: 'Failed to create list' });
+  }
+});
 
 // Create new personal list with userId
 apiRouter.post('/myLists', async (req, res) => {

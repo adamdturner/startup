@@ -30,7 +30,7 @@ class GroupList {
         .then(response => response.json())
         .then(data => {
             if (data.message) {
-                alert(data.message); // Handle errors or messages from the server
+                alert(data.message);
             } else {
                 this.fetchAndRenderLists(); // re-fetch the lists from the server to update the UI
             }
@@ -47,13 +47,12 @@ class GroupList {
         .then(response => response.json())
         .then(data => {
             if (data.id) {
-                // Item was successfully created, now you have an ID for the new item
+                // Item was successfully created
                 this.fetchAndRenderLists(); // Refresh or update your list display
             }
         });
     }
 
-    // ***** consider adding id's to users to make it easier later in the authentication phase
     addContributor(listId, userName) {
         fetch(`/api/groupLists/${listId}/contributors`, {
             method: 'POST',
@@ -61,9 +60,7 @@ class GroupList {
             body: JSON.stringify({ name: userName })
         })
         .then(response => {
-            // Check if the request was successful
             if (response.ok) {
-                // The contributor was successfully added
                 this.fetchAndRenderLists(); // Refresh or update your list display
             } else {
                 // Handle non-successful responses
@@ -83,7 +80,7 @@ class GroupList {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' }
         })
-        .then(() => this.fetchAndRenderLists()) // Assuming you create a new method to fetch lists and render
+        .then(() => this.fetchAndRenderLists())
         .catch(error => console.error('Error completing item:', error));
     }
 
@@ -92,7 +89,7 @@ class GroupList {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' }
         })
-        .then(() => this.fetchAndRenderLists()) // Assuming you create a new method to fetch lists and render
+        .then(() => this.fetchAndRenderLists())
         .catch(error => console.error('Error reactivating item:', error));
     }
 
@@ -154,9 +151,9 @@ class GroupList {
         mainElement.querySelectorAll('.list-container').forEach(container => container.remove());
     
         this.groupLists.forEach(list => {
-            const items = list.items || []; // Assuming this is an array of objects
-            const completedItems = list.completedItems || []; // Assuming this as well
-            const listContributors = list.listContributors || []; // List of contributors
+            const items = list.items || [];
+            const completedItems = list.completedItems || [];
+            const listContributors = list.listContributors || [];
     
             const listContainer = document.createElement('div');
             listContainer.className = 'list-container';

@@ -56,12 +56,26 @@ async function getListsForUser(userId) {
 }
 // get group lists
 async function getGroupListsForUser(userId) {
-  return await groupListsCollection.find({
+  // Step 1: Fetch the lists
+  const lists = await groupListsCollection.find({
     $or: [
-      { userId: userId }, // Lists created by the user
-      { listContributors: userId } // Lists where the user is a contributor
+      { userId: userId },
+      { listContributors: userId }
     ]
   }).toArray();
+
+  // Step 2: Resolve user IDs to usernames for each list
+  for (let list of lists) {
+    // Transform each userId in listContributors to userName
+    const contributorUsernames = await Promise.all(list.listContributors.map(async (contributorId) => {
+      const user = await userCollection.findOne({ _id: contributorId });
+      return user ? user.userName : "Unknown User";
+    }));
+
+    // Replace listContributors with resolved usernames
+    list.listContributors = contributorUsernames;
+  }
+  return lists;
 }
 
 // gets a single list from the specified collection
