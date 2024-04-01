@@ -342,12 +342,12 @@ apiRouter.put('/groupLists/:listId/completeItem/:itemId', async (req, res) => {
     }
 
     // Verify user is either creator or a contributor
-    if (list.userId.toString() !== user._id.toString() && !list.listContributors.includes(user._id.toString())) {
+    if (list.userId.toString() !== user._id.toString() && !list.listContributors.map(id => id.toString()).includes(user._id.toString())) {
       return res.status(403).json({ message: "Forbidden" });
     }
 
     // Move the item to completedItems
-    const updateResult = await DB.moveItemToCompleted('groupLists', req.params.listId, req.params.itemId, user._id);
+    const updateResult = await DB.moveItemToCompleted('groupLists', req.params.listId, req.params.itemId);
 
     if (!updateResult) {
       return res.status(404).json({ message: "Item or list not found." });
@@ -369,7 +369,7 @@ apiRouter.put('/myLists/:listId/completeItem/:itemId', async (req, res) => {
     return res.status(401).json({ message: "Unauthorized" });
   }
   try {
-    const updateResult = await DB.moveItemToCompleted('myLists', req.params.listId, req.params.itemId, user._id);
+    const updateResult = await DB.moveItemToCompleted('myLists', req.params.listId, req.params.itemId);
 
     if (!updateResult) {
       return res.status(404).json({ message: "Item or list not found." });
@@ -398,12 +398,13 @@ apiRouter.put('/groupLists/:listId/reactivateItem/:itemId', async (req, res) => 
       return res.status(404).json({ message: "List not found." });
     }
     
-    if (list.userId.toString() !== user._id.toString() && !list.listContributors.includes(user._id.toString())) {
+    // Verify user is either creator or a contributor
+    if (list.userId.toString() !== user._id.toString() && !list.listContributors.map(id => id.toString()).includes(user._id.toString())) {
       return res.status(403).json({ message: "Forbidden" });
     }
 
     // Reactivate the item
-    const updateResult = await DB.reactivateItem('groupLists', req.params.listId, req.params.itemId, user._id);
+    const updateResult = await DB.reactivateItem('groupLists', req.params.listId, req.params.itemId);
     if (!updateResult) {
       return res.status(404).json({ message: "Item or list not found." });
     }
@@ -432,7 +433,7 @@ apiRouter.put('/myLists/:listId/reactivateItem/:itemId', async (req, res) => {
     }
 
     // Reactivate the item
-    const updateResult = await DB.reactivateItem('myLists', req.params.listId, req.params.itemId, user._id);
+    const updateResult = await DB.reactivateItem('myLists', req.params.listId, req.params.itemId);
     if (!updateResult) {
       return res.status(404).json({ message: "Item or list not found." });
     }

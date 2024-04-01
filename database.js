@@ -115,19 +115,18 @@ async function addItemToList(collectionName, listId, newItem) {
 }
 
 // pull from items and push to completed items TODO: make sure this works for both group lists and personal lists
-async function moveItemToCompleted(collectionName, listId, itemId, userId) {
-  // Assuming userId is being correctly matched and is a string in your query
+async function moveItemToCompleted(collectionName, listId, itemId) {
   const pullResult = await db.collection(collectionName).findOneAndUpdate(
-    { _id: listId, userId: userId }, // Ensure userId is in the correct format for the query
-    { $pull: { items: { id: itemId } } }
+    { _id: listId, "items.id": itemId },
+    { $pull: { items: { id: itemId } } },
   );
 
   if (pullResult) { // Directly work with pullResult
-    const itemToMove = pullResult.items.find(item => item.id === itemId); // Assuming item IDs are strings
+    const itemToMove = pullResult.items.find(item => item.id === itemId);
     if (itemToMove) {
       const pushResult = await db.collection(collectionName).updateOne(
         { _id: listId },
-        { $push: { completedItems: itemToMove } } // Use the correct array based on your schema
+        { $push: { completedItems: itemToMove } }
       );
       return pushResult.modifiedCount === 1 ? itemToMove : null;
     }
@@ -137,10 +136,10 @@ async function moveItemToCompleted(collectionName, listId, itemId, userId) {
 
 
 // pull from completed items and push to items TODO: make sure this works for both group lists and personal lists
-async function reactivateItem(collectionName, listId, itemId, userId) {
+async function reactivateItem(collectionName, listId, itemId) {
   // Find the item and pull it from completedItems
   const pullResult = await db.collection(collectionName).findOneAndUpdate(
-    { _id: listId, userId: userId },
+    { _id: listId, "completedItems.id": itemId },
     { $pull: { completedItems: { id: itemId } } } // Adjust for "groupCompletedItems" if working with group lists
   );
   
