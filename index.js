@@ -234,8 +234,8 @@ apiRouter.post('/groupLists/:listId/items', async (req, res) => {
     if (!list) {
       return res.status(404).json({ message: "List not found." });
     }
-    // Ensure the user is either the creator or a contributor of the list
-    if (list.userId.toString() !== user._id.toString() && !list.listContributors.includes(user._id.toString())) {
+    // Verify user is either creator or a contributor
+    if (list.userId.toString() !== user._id.toString() && !list.listContributors.map(id => id.toString()).includes(user._id.toString())) {
       return res.status(403).json({ message: "Forbidden" });
     }
     const newItem = {
