@@ -383,41 +383,65 @@ apiRouter.put('/myLists/:listId/completeItem/:itemId', async (req, res) => {
 });
 
 // Marking a group list item as incomplete again (move from completed list back to main list)
-apiRouter.put('/groupLists/:listId/reactivateItem/:itemId', (req, res) => {
-  const list = groupLists.find(list => list.id === req.params.listId);
-  if (!list) {
+apiRouter.put('/groupLists/:listId/reactivateItem/:itemId', async (req, res) => {
+  const authToken = req.cookies[authCookieName];
+  const user = await DB.getUserByToken(authToken);
+  
+  if (!user) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  try {
+    // Ensure user has access to the list either as a creator or a contributor
+    const list = await DB.getListById('groupLists', req.params.listId, user._id);
+    if (!list) {
       return res.status(404).json({ message: "List not found." });
+    }
+    
+    if (list.userId.toString() !== user._id.toString() && !list.listContributors.includes(user._id.toString())) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    // Reactivate the item
+    const updateResult = await DB.reactivateItem('groupLists', req.params.listId, req.params.itemId, user._id);
+    if (!updateResult) {
+      return res.status(404).json({ message: "Item or list not found." });
+    }
+
+    res.json({ message: "Item reactivated.", item: updateResult });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
   }
-
-  const itemIndex = list.groupCompletedItems.findIndex(item => item.id === req.params.itemId);
-  if (itemIndex === -1) {
-      return res.status(404).json({ message: "Item not found." });
-  }
-
-  // Move the item back to active items
-  const [reactivatedItem] = list.groupCompletedItems.splice(itemIndex, 1);
-  list.groupItems.push(reactivatedItem);
-
-  res.json({ message: "Item reactivated.", item: reactivatedItem });
 });
 
 // Marking a personal list item as incomplete again (move from completed list back to main list)
-apiRouter.put('/myLists/:listId/reactivateItem/:itemId', (req, res) => {
-  const list = myLists.find(list => list.id === req.params.listId);
-  if (!list) {
+apiRouter.put('/myLists/:listId/reactivateItem/:itemId', async (req, res) => {
+  const authToken = req.cookies[authCookieName];
+  const user = await DB.getUserByToken(authToken);
+  
+  if (!user) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  try {
+    // Verify the list belongs to the user
+    const list = await DB.getListById('myLists', req.params.listId, user._id);
+    if (!list) {
       return res.status(404).json({ message: "List not found." });
+    }
+
+    // Reactivate the item
+    const updateResult = await DB.reactivateItem('myLists', req.params.listId, req.params.itemId, user._id);
+    if (!updateResult) {
+      return res.status(404).json({ message: "Item or list not found." });
+    }
+
+    res.json({ message: "Item reactivated.", item: updateResult });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
   }
-
-  const itemIndex = list.myCompletedItems.findIndex(item => item.id === req.params.itemId);
-  if (itemIndex === -1) {
-      return res.status(404).json({ message: "Item not found." });
-  }
-
-  // Move the item back to active items
-  const [reactivatedItem] = list.myCompletedItems.splice(itemIndex, 1);
-  list.items.push(reactivatedItem);
-
-  res.json({ message: "Item reactivated.", item: reactivatedItem });
 });
 
 

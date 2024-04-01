@@ -127,19 +127,18 @@ async function reactivateItem(collectionName, listId, itemId, userId) {
   // Find the item and pull it from completedItems
   const pullResult = await db.collection(collectionName).findOneAndUpdate(
     { _id: listId, userId: userId },
-    { $pull: { completedItems: { id: itemId } } }, // Adjust for "groupCompletedItems" if working with group lists
-    { returnDocument: 'after' }
+    { $pull: { completedItems: { id: itemId } } } // Adjust for "groupCompletedItems" if working with group lists
   );
   
   // If successful, push it back to items
-  if (pullResult.value) {
-    const itemToMove = pullResult.value.completedItems.find(item => item.id === itemId);
+  if (pullResult) {
+    const itemToMove = pullResult.completedItems.find(item => item.id === itemId);
     if (itemToMove) {
-      await db.collection(collectionName).updateOne(
+      const pushResult = await db.collection(collectionName).updateOne(
         { _id: listId },
         { $push: { items: itemToMove } } // Adjust for "groupItems" if working with group lists
       );
-      return itemToMove;
+      return pushResult.modifiedCount === 1 ? itemToMove : null;
     }
   }
   return null;
