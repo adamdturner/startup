@@ -36,6 +36,7 @@ class GroupList {
             } else {
                 this.fetchAndRenderLists(); // re-fetch the lists from the server to update the UI
             }
+            this.broadcastEvent(getUserName(), "created a new group list")
         })
         .catch(error => console.error('Error creating list:', error));
     }
@@ -202,11 +203,11 @@ class GroupList {
       this.socket = new WebSocket(`${protocol}://${window.location.host}/ws`);
       this.socket.onopen = (event) => {
         // message to display when the connection is created
-        this.addNotification(getUserName(), "is online");
+        this.broadcastEvent(getUserName(), "is online");
       };
       this.socket.onclose = (event) => {
         // message to display when the connection is closed
-        this.addNotification(getUserName(), "is online");
+        this.broadcastEvent(getUserName(), "is offline");
       };
       this.socket.onmessage = async (event) => {
         // waits for the event then calls addNotification to display the message
