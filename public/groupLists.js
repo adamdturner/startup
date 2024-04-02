@@ -201,12 +201,12 @@ class GroupList {
       const protocol = window.location.protocol === 'http:' ? 'ws' : 'wss';
       this.socket = new WebSocket(`${protocol}://${window.location.host}/ws`);
       this.socket.onopen = (event) => {
-        // decide if I want a message to display when the connection is created
-        // this.addNotification();
+        // message to display when the connection is created
+        this.addNotification(getUserName(), "is online");
       };
       this.socket.onclose = (event) => {
-        // decide if I want a message to display when the connection is closed
-        // this.addNotification();
+        // message to display when the connection is closed
+        this.addNotification(getUserName(), "is online");
       };
       this.socket.onmessage = async (event) => {
         // waits for the event then calls addNotification to display the message
