@@ -34,7 +34,6 @@ button:hover {
   background-color: #0056b3;
 }
 
-
 .notification {
   flex: 1;
   width: 100%;
@@ -54,8 +53,6 @@ button:hover {
   color: rgb(118, 190, 210);
   opacity: 1; /* Assuming you want the username fully opaque */
 }
-
-
 
 .list {
   list-style-type: none;
