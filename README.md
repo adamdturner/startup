@@ -156,13 +156,20 @@ Simon - I deployed the Simon-login to my projects simon subdomain here: [Simon](
 
 Startup - Here is a link to my startup application: [Startup](https://startup.adam260startup.click/)
 
-Backend listens for WebSocket connection -
+Backend listens for WebSocket connection - I set up a peerProxy.js file like what was done in simon and it listens for websocket connections.
 
-Frontend makes WebSocket connection -
+Frontend makes WebSocket connection - my groupLists.js file is where I have the websocket connection configured. In the constructor it configures the connection 
+to be made on open, on close and on message. There is a notification tab (using accordion in bootstrap) that shows all of the websocket messages.
 
-Data sent over WebSocket connection -
+Data sent over WebSocket connection - A websocket message is sent when someone loads their Group Lists page and it says that the user is connected. A message is
+also sent when someone creates a new group list, when someone checks off a group list item or when someone adds a contributor to a group list. An easy way to test
+this is two open two browser windows (one in incognito mode or on your phone while the other is just in a regular browser window); you can create two logins by 
+putting a username and a simple password in and clicking create (or you use logins that I've created: Username: Tim, Password: Tim, and Username Bob, password Bob).
+When you log into one of them, navigate to the Group Lists tab and open the notifications box. Once that is done, log in on the other window to the other account
+and open the Group Lists tab. Experiment by creating lists, adding items (marking them complete by clicking on them) and adding contributors to your lists. You can
+test adding contributors by having Tim add Bob to a list or Bob add Tim to a list for example. Or add other users that I've created such as Joe, Adam and Jared.
 
-WebSocket data displayed in the application interface -
+WebSocket data displayed in the application interface - All the notifications show up in the notifications tab that opens using a bootstrap accordion div.
 
 ## 8. React
 
