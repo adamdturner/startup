@@ -19,6 +19,8 @@ class GroupList {
             listContributors: list.listContributors || [],
             completedItems: list.completedItems || []
         }));
+
+        this.configureWebSocket();
     }
 
     createList(listName) {
@@ -68,6 +70,8 @@ class GroupList {
                     throw new Error(data.message || 'Failed to add contributor');
                 });
             }
+            // broadcast to other users that you added a user to your group list
+            this.broadcastEvent(getUserName(),"added a contributor to the list.")
         })
         .catch(error => {
             console.error('Error adding contributor:', error);
@@ -81,6 +85,7 @@ class GroupList {
             headers: { 'Content-Type': 'application/json' }
         })
         .then(() => this.fetchAndRenderLists())
+        .then(() => this.broadcastEvent(getUserName(),"just completed an item."))
         .catch(error => console.error('Error completing item:', error));
     }
 
@@ -191,6 +196,57 @@ class GroupList {
             this.setupEventListeners(listContainer, list._id);
         });
     }    
+
+    configureWebSocket() {
+      const protocol = window.location.protocol === 'http:' ? 'ws' : 'wss';
+      this.socket = new WebSocket(`${protocol}://${window.location.host}/ws`);
+      this.socket.onopen = (event) => {
+        // decide if I want a message to display when the connection is created
+        // this.addNotification();
+      };
+      this.socket.onclose = (event) => {
+        // decide if I want a message to display when the connection is closed
+        // this.addNotification();
+      };
+      this.socket.onmessage = async (event) => {
+        // waits for the event then calls addNotification to display the message
+        const msg = JSON.parse(await event.data.text());
+        this.addNotification(msg.user, msg.data);
+      };
+    }
+
+    // Assuming you have a function that is called whenever a new notification is received
+    addNotification(username, message) {
+      // Create the notification container
+      const notificationDiv = document.createElement('div');
+      notificationDiv.classList.add('notification');
+
+      // Add the username span
+      const userNameSpan = document.createElement('span');
+      userNameSpan.classList.add('user-name');
+      userNameSpan.textContent = username;
+      notificationDiv.appendChild(userNameSpan);
+
+      // Add the message span
+      const messageSpan = document.createElement('span');
+      messageSpan.classList.add('user-message');
+      messageSpan.textContent = message;
+      notificationDiv.appendChild(messageSpan);
+
+      // Find the accordion body where the notifications should be displayed
+      const accordionBody = document.querySelector('.notification');
+
+      // Append the new notification
+      accordionBody.appendChild(notificationDiv);
+    }
+
+    broadcastEvent(user, data) {
+      const event = {
+        user: user,
+        data: data,
+      };
+      this.socket.send(JSON.stringify(event));
+    }
 }
 
 const groupList = new GroupList();

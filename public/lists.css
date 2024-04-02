@@ -34,6 +34,29 @@ button:hover {
   background-color: #0056b3;
 }
 
+
+.notification {
+  flex: 1;
+  width: 100%;
+  padding: 0 1em; /* Removes top and bottom padding, applies left and right padding */
+  margin-bottom: 10px; /* Adjusts spacing between notifications, if needed */
+  line-height: 1.4; /* Controls the height of lines within the notification, effectively managing vertical space */
+}
+
+.user-name, #user-messages {
+  display: inline;
+  margin-right: 5px;
+  padding: 0 5px; /* No top/bottom padding, applies left/right padding */
+  opacity: 0.7;
+}
+
+.user-name {
+  color: rgb(118, 190, 210);
+  opacity: 1; /* Assuming you want the username fully opaque */
+}
+
+
+
 .list {
   list-style-type: none;
   padding: 0;
