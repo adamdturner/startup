@@ -173,3 +173,16 @@ WebSocket data displayed in the application interface - All the notifications sh
 
 ## 8. React
 
+Simon - I deployed the Simon-login to my projects simon subdomain here: [Simon](https://simon.adam260startup.click/)
+
+Startup - Here is a link to my startup application: [Startup](https://startup.adam260startup.click/)
+
+Bundled using Vite - I included a vite.config.js file to configure vite in the project.
+
+Multiple functional React components - Login and Logout functionality currently works and renders the correct html.
+
+React router - the router is set up in the app.jsx file to route between pages. You can test this by selecting different options in the nav-bar at the top
+of the page and see how it switches between the Home or About pages for example.
+
+React hooks - an example of a react hook that I implemented is in the about.jsx file with the React.useEffect() call because I want the boredAPI to be
+called any time the page is rendered.

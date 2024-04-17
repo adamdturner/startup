@@ -6,10 +6,6 @@ with navigation bars and also the footers. */
   flex-direction: column;
 }
 
-.h1 {
-  align-items: center;
-}
-
 header {
   flex: 0;
   padding: 20px;

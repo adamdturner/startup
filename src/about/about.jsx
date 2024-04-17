@@ -8,7 +8,7 @@ export function About(props) {
           .then((response) => response.json())
           .then((data) => {
             if (data && data.activity) {
-              setActivity(data.activity); // assuming 'activity' is the field you want from the API response
+              setActivity(data.activity);
             }
           })
           .catch(error => {
