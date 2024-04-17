@@ -1,9 +1,13 @@
 /*  This file does the formatting for the main look of each page including headers 
 with navigation bars and also the footers. */
 
-body {
+.body {
   display: flex;
   flex-direction: column;
+}
+
+.h1 {
+  align-items: center;
 }
 
 header {

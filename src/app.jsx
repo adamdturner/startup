@@ -1,10 +1,10 @@
 import React from 'react';
 import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
 import { Login } from './login/login';
-import { About } from './about/about.jsx';
-import { MyLists } from './myLists/myLists.jsx';
-import { GroupLists } from './groupLists/groupLists.jsx';
-import { AuthState } from './login/authState';
+import About from './about/about.jsx';
+import MyLists from './myLists/myLists.jsx';
+import GroupLists from './groupLists/groupLists.jsx';
+import { AuthState } from './login/authState.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './app.css';
 
@@ -15,10 +15,10 @@ function App() {
 
   return (
     <BrowserRouter>
-    <body>
+    <div className='body'>
       <header>
         <nav className='navbar'>
-          <a className='navbar-brand'>Task Manager<sup>&reg;</sup></a>
+          <div className='navbar-brand'>Task Manager<sup>&reg;</sup></div>
             <ul className='navbar-nav'>
 
               <li className='nav-item'>
@@ -46,27 +46,13 @@ function App() {
       </header>
 
       <Routes>
-        <Route
-          path='/'
-          element={
-            <Login
-              userName={userName}
-              authState={authState}
-              onAuthChange={(userName, authState) => {
-                setAuthState(authState);
-                setUserName(userName);
-              }}
-            />
-          }
-          exact
-        />
+        <Route path='/' element={ <Login userName={userName} authState={authState} onAuthChange={(userName, authState) => {
+                setAuthState(authState); setUserName(userName); }} /> } exact />
         <Route path='/myLists' element={<MyLists />} />
         <Route path='/groupLists' element={<GroupLists />} />
         <Route path='/about' element={<About />} />
         <Route path='*' element={<NotFound />} />
       </Routes>
-
-      <main>App components go here</main>
 
       <footer>
         <hr />
@@ -75,7 +61,7 @@ function App() {
         <a href='https://github.com/webprogramming260/simon-react'>GitHub</a>
       </footer>
       
-    </body>
+    </div>
     </BrowserRouter>
   );
 }
