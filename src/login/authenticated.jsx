@@ -24,8 +24,8 @@ export function Authenticated(props) {
     <div>
       <p>Access your personal and group task lists</p>
       <div className='playerName'>{props.userName}</div>
-      <Button variant='secondary' onClick={() => navigate('/play')}>My Lists</Button>
-      <Button variant='secondary' onClick={() => navigate('/play')}>Group Lists</Button>
+      <Button variant='secondary' onClick={() => navigate('/myLists')}>My Lists</Button>
+      <Button variant='secondary' onClick={() => navigate('/groupLists')}>Group Lists</Button>
       <Button variant='primary' onClick={() => logout()}>
         Logout
       </Button>

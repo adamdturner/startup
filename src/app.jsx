@@ -1,9 +1,9 @@
 import React from 'react';
 import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
-import { Login } from './login/login';
-import About from './about/about.jsx';
-import MyLists from './myLists/myLists.jsx';
-import GroupLists from './groupLists/groupLists.jsx';
+import { Login } from './login/login.jsx';
+import { About } from './about/about.jsx';
+import { MyLists } from './myLists/myLists.jsx';
+import { GroupLists } from './groupLists/groupLists.jsx';
 import { AuthState } from './login/authState.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './app.css';
