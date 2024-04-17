@@ -1,9 +1,20 @@
 import React from 'react';
+import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
+import { Login } from './login/login';
+import { About } from './about/about.jsx';
+import { MyLists } from './myLists/myLists.jsx';
+import { GroupLists } from './groupLists/groupLists.jsx';
+import { AuthState } from './login/authState';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './app.css';
 
-export default function App() {
+function App() {
+  const [userName, setUserName] = React.useState(localStorage.getItem('userName') || '');
+  const currentAuthState = userName ? AuthState.Authenticated : AuthState.Unauthenticated;
+  const [authState, setAuthState] = React.useState(currentAuthState);
+
   return (
+    <BrowserRouter>
     <body>
       <header>
         <nav className='navbar'>
@@ -11,24 +22,49 @@ export default function App() {
             <ul className='navbar-nav'>
 
               <li className='nav-item'>
-                <a className='nav-link' href='index.html'>Home</a>
+                <NavLink className='nav-link' to=''>Home</NavLink>
               </li>
 
               <li className='nav-item'>
-                <a className='nav-link' href='about.html'>About</a>
+                <NavLink className='nav-link' to='/about'>About</NavLink>
               </li>
 
+              {authState === AuthState.Authenticated && (
               <li className='nav-item'>
-                <a className='nav-link' href='myLists.html'>myLists</a>
+                <NavLink className='nav-link' to='/myLists'>myLists</NavLink>
               </li>
+              )}
 
+              {authState === AuthState.Authenticated && (
               <li className='nav-item'>
-                <a className='nav-link' href='groupLists.html'>groupLists</a>
+                <NavLink className='nav-link' to='/groupLists'>groupLists</NavLink>
               </li>
+              )}
 
             </ul>
         </nav>
       </header>
+
+      <Routes>
+        <Route
+          path='/'
+          element={
+            <Login
+              userName={userName}
+              authState={authState}
+              onAuthChange={(userName, authState) => {
+                setAuthState(authState);
+                setUserName(userName);
+              }}
+            />
+          }
+          exact
+        />
+        <Route path='/myLists' element={<MyLists />} />
+        <Route path='/groupLists' element={<GroupLists />} />
+        <Route path='/about' element={<About />} />
+        <Route path='*' element={<NotFound />} />
+      </Routes>
 
       <main>App components go here</main>
 
@@ -40,7 +76,12 @@ export default function App() {
       </footer>
       
     </body>
+    </BrowserRouter>
   );
 }
 
+function NotFound() {
+  return <main className='container-fluid bg-secondary text-center'>404: Return to sender. Address unknown.</main>;
+}
 
+export default App;
