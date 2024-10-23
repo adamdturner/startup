@@ -1,4 +1,4 @@
-# startup
+# startup application - Task Manager
 
 Here are the notes I will be taking for this class in the [notes.md](notes.md) file.
 
